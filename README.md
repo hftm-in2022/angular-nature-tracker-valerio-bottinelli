@@ -388,6 +388,43 @@ Push the new branch to the remote repository:
 git push -u origin Setup
 ```
 
+#### Integrate the new Branch to your main
+- Go to your remote Repository
+- **Compare & Pull request**: click on the green button
+- Create **Pull request**
+- The integrated tests run now automatically and tell you if you have any conflicts before you can merge the branch into your main
+- **Merge Pull request** to merge the branch into your main
+- **Confirm Merge**
+
+---
+
+### Azure
+
+Welcome to Azure.
+This will guide you through the complete setup for the Deployment to Azure.
+
+##### Azure Tools: 
+- Open VSC and hit **CTRL+P** and add the following line
+ext install ms-vscode.vscode-node-azure-pack https://letmegooglethat.com/?q=how+to+create+an+azure+account
+- Press Enter
+
+- **Additioanl Information:** For additional information you can visit [Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack "Azure Tools ")
+
+
+We will not look on how to create a Azure Account. If you don't have one, create one. 
+
+- Go to  VSC
+- Click **CTRL+ALT+A**
+- You get redirected to Azure. Select your Account
+- Enter **Password**
+- Select prefered license
+- Right click on **Static Web Apps**and Select **Create Static Web App...**
+- Enter a name for the static web app
+- Select a Service Plan
+- Select Angular
+- Enter "/" for the directory
+- Blank
+- Your remote repository is now updated
 
 
 
