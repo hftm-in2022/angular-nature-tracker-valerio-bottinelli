@@ -336,3 +336,60 @@ To make the test work in GitHub Actions, we have to change the package.json in o
 npm run test:ci
 ```
 
+#### ng-update
+
+- Go to: [GitHub Marketplace](https://github.com/marketplace/actions/ng-update "Marketplace Github")
+
+- Copy this code
+
+```yaml
+name: "Update Angular Action"
+on: # when the action should run. Can also be a CRON or in response to external events. see https://git.io/JeBz1
+  schedule:
+  - cron: '30 5 * * 3'
+
+jobs:
+  ngxUptodate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Updating ng dependencies # the magic happens here !
+        uses: fast-facts/ng-update@v1
+        with:
+          base-branch: main
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+
+```
+
+- Open your project navigate to into your **.github** folder
+- Add a new file called **ng-update.yml**
+- Add the above mentionend code.
+- Create a new Branch
+
+Check the current status of your working directory to see what files have been modified:
+```Terminal
+git status
+```
+Stage the changes that you want to commit:
+```Terminal
+git add .
+```
+Commit your changes with a meaningful message:
+```Terminal
+git commit -m "ng-update.yml"
+```
+
+Create a new branch:
+```Terminal
+git checkout -b Setup
+```
+Push the new branch to the remote repository:
+```Terminal
+git push -u origin Setup
+```
+
+
+
+
+
+
