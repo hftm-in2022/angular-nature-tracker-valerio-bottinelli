@@ -1,0 +1,47 @@
+main {
+    width: 90%;
+    max-width: 50rem;
+    margin: 2.5rem auto;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 2rem;
+    background-color: #f5f2e3; // soft beige background
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  
+    @media (min-width: 768px) {
+      margin: 4rem auto;
+      grid-template-columns: 1fr 3fr;
+    }
+  }
+  
+  #users {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+    overflow: auto;
+    background-color: #e2d6c0; // earthy light tan for contrast
+    border-radius: 8px;
+    padding: 0.5rem;
+  
+    @media (min-width: 768px) {
+      flex-direction: column;
+    }
+  }
+  
+  #fallback {
+    font-weight: bold;
+    font-size: 1.15rem;
+    margin: 0;
+    text-align: center;
+    color: #4f3a2b; // deep brown for emphasis
+  
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+      text-align: left;
+    }
+  }
+  
