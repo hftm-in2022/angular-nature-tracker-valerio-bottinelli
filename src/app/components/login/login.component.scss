@@ -1,0 +1,39 @@
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fcfbe8; /* AppColors.color5 */
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: #111111; /* AppColors.color3 */
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #c49120; /* AppColors.color4 */
+  border-radius: 4px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #748e55; /* AppColors.color1 */
+  color: #fcfbe8; /* AppColors.color5 */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #6bba75; /* AppColors.greenColor */
+}

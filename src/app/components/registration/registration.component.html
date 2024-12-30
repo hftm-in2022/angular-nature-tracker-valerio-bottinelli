@@ -1,0 +1,36 @@
+<div class="registration-container">
+  <h2>Registration</h2>
+  <form>
+    <label for="email">Email Address:</label>
+    <input
+      #email
+      id="email"
+      type="email"
+      placeholder="Enter your email address"
+    />
+
+    <label for="password">Password:</label>
+    <input
+      #password
+      id="password"
+      type="password"
+      placeholder="Enter your password"
+    />
+
+    <label for="repeat-password">Repeat Password:</label>
+    <input
+      #repeatPassword
+      id="repeat-password"
+      type="password"
+      placeholder="Repeat your password"
+    />
+
+    <button
+      type="button"
+      (click)="register(email.value, password.value, repeatPassword.value)"
+    >
+      Register
+    </button>
+    <a routerLink="/login"><button type="button">Back to Login</button></a>
+  </form>
+</div>

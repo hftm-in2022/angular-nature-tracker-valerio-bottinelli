@@ -14,7 +14,7 @@
   color: #c49120; /* Footer link color */
   text-decoration: none;
   font-weight: bold;
-  padding: 10px 15px; /* Add padding for clickable area */
+
   border-radius: 5px; /* Optional: Rounded corners */
   transition:
     background-color 0.3s ease,
@@ -35,4 +35,38 @@
 .selected {
   background-color: #c49120;
   color: #150722;
+}
+
+/* Login Button Container */
+.login-button-container {
+  margin-left: auto;
+}
+
+/* Login Button Styling */
+.login-button {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between text and icon */
+  background-color: #748e55; /* Green button background */
+  color: #fcfbe8; /* Light text */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+/* Login Button Hover */
+.login-button:hover {
+  background-color: #6bba75;
+  transform: scale(1.05);
+}
+
+/* Login Icon Styling */
+.login-icon {
+  height: 16px;
+  width: 16px;
 }
