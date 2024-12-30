@@ -1,0 +1,25 @@
+/* General button styling */
+button {
+  background-color: #748e55; /* AppColors.color1 */
+  color: #fcfbe8; /* AppColors.color5 */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
+}
+
+/* Hover effect */
+button:hover {
+  background-color: #6bba75; /* AppColors.greenColor */
+  transform: scale(1.05); /* Slightly increase size */
+}
+
+/* Active effect */
+button:active {
+  background-color: #c49120; /* AppColors.color4 */
+}

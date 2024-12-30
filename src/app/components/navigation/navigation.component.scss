@@ -1,0 +1,38 @@
+/* Navigation Bar */
+.navigation {
+  background-color: #111111; /* Same as footer */
+  color: #fcfbe8; /* Text color matching footer */
+  padding: 20px 10px; /* Consistent padding with footer */
+  text-align: center; /* Center-align items */
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: center; /* Center the links horizontally */
+  gap: 15px; /* Space between links */
+}
+
+/* Navigation Links */
+.navigation a {
+  color: #c49120; /* Footer link color */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 15px; /* Add padding for clickable area */
+  border-radius: 5px; /* Optional: Rounded corners */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover Effect */
+.navigation a:hover {
+  background-color: #6bba75;
+  color: #111111;
+}
+
+/* Active Link */
+.navigation a.active {
+  border-bottom: 2px solid #6bba75; /* Indicate active link */
+}
+
+.selected {
+  background-color: #c49120;
+  color: #150722;
+}

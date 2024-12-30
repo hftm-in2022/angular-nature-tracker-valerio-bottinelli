@@ -1,0 +1,26 @@
+/* Header container */
+.header {
+  width: 100%; /* Full width */
+  height: 7cm; /* Set the height to 7cm */
+  position: relative; /* For content positioning */
+  overflow: hidden; /* Ensure the image doesn't overflow */
+}
+
+/* Background image styling */
+.background-image {
+  width: 100%;
+  height: 100%;
+  background-image: url("/assets/background_forest.png");
+  background-size: cover; /* Cover the full container */
+  background-position: center; /* Center the image */
+  display: flex; /* For centering the title */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Title image styling */
+.app-title {
+  max-height: 80%; /* Limit the title image height */
+  max-width: 90%; /* Limit the title image width */
+  object-fit: contain; /* Ensure the image scales proportionally */
+}
