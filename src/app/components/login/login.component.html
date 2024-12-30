@@ -1,0 +1,29 @@
+<div class="login-container">
+  <h2>Login</h2>
+  <form>
+    <label for="email">Email Address:</label>
+    <input
+      #email
+      id="email"
+      type="email"
+      placeholder="Enter your email address"
+    />
+
+    <label for="password">Password:</label>
+    <input
+      #password
+      id="password"
+      type="password"
+      placeholder="Enter your password"
+    />
+
+    <a routerLink="/home">
+      <button type="button" (click)="login(email.value, password.value)">
+        Login
+      </button>
+    </a>
+  </form>
+  <a routerLink="/registration">
+    <button type="button">Not Registered? Register Here</button>
+  </a>
+</div>

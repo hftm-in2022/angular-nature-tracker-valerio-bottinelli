@@ -8,4 +8,21 @@
   <a routerLink="/profile" routerLinkActive="selected">
     <button>Profile</button>
   </a>
+
+  <div class="login-button-container">
+    <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
+      <a routerLink="/login">
+        <button class="login-button">
+          <span>Login</span>
+          <img src="assets/login.png" alt="Login Icon" class="login-icon" />
+        </button>
+      </a>
+    </ng-container>
+    <ng-template #loggedInTemplate>
+      <button class="login-button" (click)="logout()">
+        <span>Logout</span>
+        <img src="assets/logout.png" alt="Logout Icon" class="login-icon" />
+      </button>
+    </ng-template>
+  </div>
 </nav>
