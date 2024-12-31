@@ -445,3 +445,166 @@ ng generate component components/componentname
 
 Then i created the routing for the three different main views
 with routing and indicated the active route on the selected button.
+
+## Summary of Authentication Setup (UI and Backend)
+
+### 1. Installed Firebase and AngularFire
+
+Installed the necessary packages to use Firebase with Angular:
+
+```bash
+npm install @angular/fire firebase
+```
+
+### 2. Initialized Firebase in Angular
+
+Set up Firebase in the application configuration:
+
+- Added `provideFirebaseApp`, `provideAuth`, and `provideFirestore` in `app.config.ts`:
+
+```typescript
+import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
+import { provideAuth, getAuth } from "@angular/fire/auth";
+import { provideFirestore, getFirestore } from "@angular/fire/firestore";
+export const appConfig = {
+  providers: [provideFirebaseApp(() => initializeApp(environment.firebase)), provideAuth(() => getAuth()), provideFirestore(() => getFirestore())],
+};
+```
+
+### 3. Added Login Component
+
+Created a standalone login component and set up the login logic:
+
+```typescript
+import { Component } from "@angular/core";
+import { Auth, signInWithEmailAndPassword } from "@angular/fire/auth";
+@Component({
+  selector: "app-login",
+  standalone: true,
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
+})
+export class LoginComponent {
+  constructor(private auth: Auth) {}
+  login(email: string, password: string): void {
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => console.log("Logged in:", userCredential.user))
+      .catch((error) => console.error("Error:", error.message));
+  }
+}
+```
+
+**Login HTML**:
+
+```html
+<div class="login-container">
+  <h2>Login</h2>
+  <form>
+    <label for="email">Email Address:</label>
+    <input #email id="email" type="email" placeholder="Enter your email" />
+
+    <label for="password">Password:</label>
+    <input #password id="password" type="password" placeholder="Enter your password" />
+
+    <button type="button" (click)="login(email.value, password.value)">Login</button>
+  </form>
+  <a routerLink="/registration">Not Registered? Register Here</a>
+</div>
+```
+
+### 4. Added Registration Component
+
+Created a standalone registration component and implemented user creation:
+
+```typescript
+import { Component } from "@angular/core";
+import { Auth, createUserWithEmailAndPassword } from "@angular/fire/auth";
+@Component({
+  selector: "app-registration",
+  standalone: true,
+  templateUrl: "./registration.component.html",
+  styleUrls: ["./registration.component.scss"],
+})
+export class RegistrationComponent {
+  constructor(private auth: Auth) {}
+  register(email: string, password: string, repeatPassword: string): void {
+    if (password !== repeatPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    createUserWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => console.log("User registered:", userCredential.user))
+      .catch((error) => console.error("Error:", error.message));
+  }
+}
+```
+
+**Registration HTML**:
+
+```html
+<div class="registration-container">
+  <h2>Registration</h2>
+  <form>
+    <label for="email">Email Address:</label>
+    <input #email id="email" type="email" placeholder="Enter your email" />
+
+    <label for="password">Password:</label>
+    <input #password id="password" type="password" placeholder="Enter your password" />
+
+    <label for="repeat-password">Repeat Password:</label>
+    <input #repeatPassword id="repeat-password" type="password" placeholder="Repeat your password" />
+
+    <button type="button" (click)="register(email.value, password.value, repeatPassword.value)">Register</button>
+    <a routerLink="/login">Back to Login</a>
+  </form>
+</div>
+```
+
+### 5. Added Logout Logic
+
+Updated the navigation to toggle between login and logout buttons based on authentication state:
+
+```typescript
+import { Component, OnInit } from "@angular/core";
+import { Auth, onAuthStateChanged, signOut } from "@angular/fire/auth";
+import { Router } from "@angular/router";
+@Component({
+  selector: "app-navigation",
+  standalone: true,
+  templateUrl: "./navigation.component.html",
+  styleUrls: ["./navigation.component.scss"],
+})
+export class NavigationComponent implements OnInit {
+  isLoggedIn: boolean = false;
+  constructor(
+    private auth: Auth,
+    private router: Router,
+  ) {}
+  ngOnInit(): void {
+    onAuthStateChanged(this.auth, (user) => {
+      this.isLoggedIn = !!user;
+    });
+  }
+  logout(): void {
+    signOut(this.auth).then(() => this.router.navigate(["/login"]));
+  }
+}
+```
+
+**Navigation HTML**:
+
+```html
+<nav class="navigation">
+  <a routerLink="/home">Home</a>
+  <a routerLink="/blogs">Blogs</a>
+  <a routerLink="/profile">Profile</a>
+  <div>
+    <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/login">Login</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn">
+      <button (click)="logout()">Logout</button>
+    </ng-container>
+  </div>
+</nav>
+```
