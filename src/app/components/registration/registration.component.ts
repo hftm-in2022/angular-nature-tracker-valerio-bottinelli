@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, User } from '@angular/fire/auth';
 import { RouterLink } from '@angular/router';
+import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registration',
@@ -10,7 +11,10 @@ import { RouterLink } from '@angular/router';
   styleUrl: './registration.component.scss',
 })
 export class RegistrationComponent {
-  constructor(private auth: Auth) {}
+  constructor(
+    private auth: Auth,
+    private firestore: Firestore,
+  ) {}
 
   register(email: string, password: string, repeatPassword: string): void {
     if (password !== repeatPassword) {
@@ -18,11 +22,20 @@ export class RegistrationComponent {
       return;
     }
 
-    console.log('Attempting to register with email:', email);
     createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        console.log('User registered:', userCredential.user);
-        alert('Registration successful!');
+      .then(async (userCredential) => {
+        const user: User = userCredential.user;
+        console.log('User registered:', user);
+
+        // Save user data to Firestore
+        const userDocRef = doc(this.firestore, `users/${user.uid}`);
+        await setDoc(userDocRef, {
+          email: user.email,
+          createdAt: new Date(),
+          role: 'user', // Optional: Add roles or other metadata
+        });
+
+        alert('Registration successful and user data saved!');
       })
       .catch((error) => {
         console.error('Error registering user:', error.message);

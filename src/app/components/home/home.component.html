@@ -1,5 +1,14 @@
-<div class="home-container">
-  <h1>Welcome to Nature Tracker</h1>
-  <p *ngIf="userEmail">Logged in as: {{ userEmail }}</p>
-  <p *ngIf="!userEmail">You are not logged in.</p>
+<div *ngIf="loading; else userDataTemplate">
+  <p>Loading user data...</p>
 </div>
+
+<ng-template #userDataTemplate>
+  <div *ngIf="userData; else noData">
+    <h2>Welcome, {{ userData.email }}</h2>
+    <p>Role: {{ roleName || "Unknown" }}</p>
+    <p>Account created on: {{ userData.createdAt.toDate() | date }}</p>
+  </div>
+  <ng-template #noData>
+    <p>No user data found.</p>
+  </ng-template>
+</ng-template>
