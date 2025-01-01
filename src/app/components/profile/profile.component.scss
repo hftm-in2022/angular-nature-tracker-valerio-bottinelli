@@ -1,0 +1,46 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  p {
+    margin: 10px 0;
+  }
+
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button:first-child {
+    background-color: #6bba75; /* Save button green */
+    color: #fff;
+  }
+
+  button:last-child {
+    background-color: #e0865e; /* Cancel button red */
+    color: #fff;
+  }
+}

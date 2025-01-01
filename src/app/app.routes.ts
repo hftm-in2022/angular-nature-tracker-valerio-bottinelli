@@ -4,6 +4,7 @@ import { BlogsComponent } from './components/blogs/blogs.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { BlogEditorComponent } from './components/blog-editor/blog-editor.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -11,4 +12,6 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
+  { path: 'blogs/create', component: BlogEditorComponent },
+  { path: 'blogs/edit/:id', component: BlogEditorComponent },
 ];

@@ -1,1 +1,55 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <h2>Profile</h2>
+
+  <!-- Read View -->
+  <div *ngIf="!isEditing && userProfile; else editForm">
+    <p><strong>Email:</strong> {{ userProfile.email }}</p>
+    <p><strong>Username:</strong> {{ userProfile.username || "Not set" }}</p>
+    <p><strong>First Name:</strong> {{ userProfile.firstName || "Not set" }}</p>
+    <p><strong>Last Name:</strong> {{ userProfile.lastName || "Not set" }}</p>
+    <p>
+      <strong>Date of Birth:</strong> {{ userProfile.dateOfBirth || "Not set" }}
+    </p>
+    <button (click)="toggleEdit()">Edit</button>
+  </div>
+
+  <!-- Edit Form -->
+  <ng-template #editForm>
+    <form *ngIf="userProfile">
+      <label for="username">Username:</label>
+      <input
+        id="username"
+        [(ngModel)]="userProfile.username"
+        name="username"
+        placeholder="Enter username"
+      />
+
+      <label for="firstName">First Name:</label>
+      <input
+        id="firstName"
+        [(ngModel)]="userProfile.firstName"
+        name="firstName"
+        placeholder="Enter first name"
+      />
+
+      <label for="lastName">Last Name:</label>
+      <input
+        id="lastName"
+        [(ngModel)]="userProfile.lastName"
+        name="lastName"
+        placeholder="Enter last name"
+      />
+
+      <label for="dateOfBirth">Date of Birth:</label>
+      <input
+        id="dateOfBirth"
+        type="date"
+        [(ngModel)]="userProfile.dateOfBirth"
+        name="dateOfBirth"
+      />
+
+      <button type="button" (click)="saveProfile()">Save</button>
+      <button type="button" (click)="toggleEdit()">Cancel</button>
+    </form>
+  </ng-template>
+</div>

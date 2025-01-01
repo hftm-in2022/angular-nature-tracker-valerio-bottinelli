@@ -1,39 +1,97 @@
 .registration-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fcfbe8; /* AppColors.color5 */
+  width: 80%; /* Use 80% of the parent (main) width */
+  margin: 0 auto; /* Ensure horizontal centering */
+  margin-bottom: 300px;
+  padding: 30px;
+  background-color: #606060; /* AppColors.color2 */
+  border-radius: 12px;
   text-align: center;
-}
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
-label {
-  display: block;
-  margin-top: 10px;
-  color: #111111; /* AppColors.color3 */
-  font-weight: bold;
-}
+  /* Add responsive handling */
+  @media (max-width: 768px) {
+    width: 90%; /* Adjust width for smaller screens */
+  }
 
-input {
-  width: 100%;
-  margin-top: 5px;
-  padding: 10px;
-  border: 1px solid #c49120; /* AppColors.color4 */
-  border-radius: 4px;
-}
+  .title {
+    font-size: 28px; /* Slightly larger title */
+    font-weight: bold;
+    color: #748e55; /* AppColors.color1 */
+    margin-bottom: 30px; /* Add space below the title */
+  }
 
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #748e55; /* AppColors.color1 */
-  color: #fcfbe8; /* AppColors.color5 */
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
+  label {
+    display: block;
+    margin-top: 15px; /* More space between the labels */
+    font-weight: bold;
+    color: #fcfbe8; /* AppColors.color5 */
+    text-align: left;
+    font-size: 16px;
+  }
 
-button:hover {
-  background-color: #6bba75; /* AppColors.greenColor */
+  input {
+    width: 100%;
+    margin-top: 8px; /* Smaller margin between label and input */
+    margin-bottom: 15px; /* Add space below the input fields */
+    margin-right: 15px;
+    padding: 12px; /* Slightly larger padding for better usability */
+    border: 1px solid #c49120; /* AppColors.color4 */
+    border-radius: 6px;
+    background-color: #fcfbe8; /* AppColors.color5 */
+    color: #111111; /* AppColors.color3 */
+    font-size: 16px;
+  }
+
+  input::placeholder {
+    color: #c49120; /* AppColors.color4 */
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #6bba75; /* AppColors.greenColor */
+  }
+
+  .button-group {
+    margin-top: 25px; /* More spacing above buttons */
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Space between buttons */
+  }
+
+  .register-button {
+    flex: 1;
+    padding: 12px 25px; /* Larger button for better usability */
+    background-color: #748e55; /* AppColors.color1 */
+    color: #fcfbe8; /* AppColors.color5 */
+    font-weight: bold;
+    border: none;
+    border-radius: 6px; /* Slightly more rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+
+  .register-button:hover {
+    background-color: #6bba75; /* AppColors.greenColor */
+  }
+
+  .back-button {
+    flex: 1;
+    padding: 12px 25px; /* Larger button for better usability */
+    background-color: transparent;
+    color: #748e55; /* AppColors.color1 */
+    font-weight: bold;
+    border: 1px solid #748e55; /* AppColors.color1 */
+    border-radius: 6px; /* Slightly more rounded corners */
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+    font-size: 16px;
+  }
+
+  .back-button:hover {
+    background-color: #748e55; /* AppColors.color1 */
+    color: #fcfbe8; /* AppColors.color5 */
+  }
 }

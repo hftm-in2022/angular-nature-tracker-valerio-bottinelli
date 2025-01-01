@@ -1,1 +1,26 @@
-<p>blogs works!</p>
+<div class="blogs-container">
+  <h2>Blogs</h2>
+
+  <!-- Create Blog Button -->
+  <div class="create-blog-button">
+    <button *ngIf="isLoggedIn" (click)="navigateToCreate()">
+      Create New Blog
+    </button>
+    <p *ngIf="!isLoggedIn" class="login-warning">Log in to create a blog.</p>
+  </div>
+
+  <!-- List of Blogs -->
+  <div *ngFor="let blog of blogs" class="blog-item">
+    <h3>{{ blog.title }}</h3>
+    <p><strong>Author:</strong> {{ blog.author }}</p>
+    <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
+    <p>{{ blog.content }}</p>
+    <p><strong>Tags:</strong> {{ getFormattedTags(blog.tags) }}</p>
+
+    <!-- Blog Actions (Only for Blog Owner) -->
+    <div class="blog-actions" *ngIf="blog.authorId === currentUser?.uid">
+      <button (click)="navigateToEdit(blog.id)">Edit</button>
+      <button (click)="deleteBlog(blog.id)">Delete</button>
+    </div>
+  </div>
+</div>
