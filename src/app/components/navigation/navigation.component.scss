@@ -1,24 +1,24 @@
 /* Navigation Bar */
 .navigation {
-  background-color: #111111; /* Same as footer */
-  color: #fcfbe8; /* Text color matching footer */
-  padding: 20px 10px; /* Consistent padding with footer */
-  text-align: center; /* Center-align items */
-  display: flex; /* Flexbox for horizontal layout */
-  justify-content: center; /* Center the links horizontally */
-  gap: 15px; /* Space between links */
+  background-color: #fcfbe8c5;
+  color: #fcfbe8;
+  padding: 20px 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 /* Navigation Links */
 .navigation a {
-  color: #c49120; /* Footer link color */
+  color: #c49120;
   text-decoration: none;
   font-weight: bold;
 
-  border-radius: 5px; /* Optional: Rounded corners */
+  border-radius: 5px;
   transition:
     background-color 0.3s ease,
-    color 0.3s ease; /* Smooth hover transition */
+    color 0.3s ease;
 }
 
 /* Hover Effect */
@@ -29,7 +29,7 @@
 
 /* Active Link */
 .navigation a.active {
-  border-bottom: 2px solid #6bba75; /* Indicate active link */
+  border-bottom: 2px solid #6bba75;
 }
 
 .selected {
@@ -46,9 +46,9 @@
 .login-button {
   display: flex;
   align-items: center;
-  gap: 8px; /* Space between text and icon */
-  background-color: #748e55; /* Green button background */
-  color: #fcfbe8; /* Light text */
+  gap: 8px;
+  background-color: #748e55;
+  color: #fcfbe8;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;

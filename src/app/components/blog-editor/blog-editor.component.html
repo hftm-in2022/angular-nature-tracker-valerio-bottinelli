@@ -1,0 +1,37 @@
+<div class="blog-editor-container">
+  <h2>{{ isEditing ? "Edit Blog" : "Create Blog" }}</h2>
+  <form (ngSubmit)="saveBlog()">
+    <label for="title">Title:</label>
+    <input
+      id="title"
+      [(ngModel)]="blog.title"
+      name="title"
+      required
+      placeholder="Enter the blog title"
+    />
+
+    <label for="content">Content:</label>
+    <textarea
+      id="content"
+      [(ngModel)]="blog.content"
+      name="content"
+      required
+      placeholder="Write your blog content"
+    ></textarea>
+
+    <label for="tags">Tags (comma separated):</label>
+    <input
+      id="tags"
+      [(ngModel)]="blog.tags"
+      name="tags"
+      placeholder="Add tags"
+    />
+
+    <div class="form-actions">
+      <button type="submit">
+        {{ isEditing ? "Update Blog" : "Create Blog" }}
+      </button>
+      <button type="button" (click)="goToBlogs()">Cancel</button>
+    </div>
+  </form>
+</div>

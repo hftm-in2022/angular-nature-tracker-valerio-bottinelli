@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, User } from '@angular/fire/auth';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './registration.component.html',
-  styleUrl: './registration.component.scss',
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent {
   constructor(
     private auth: Auth,
     private firestore: Firestore,
+    private router: Router,
   ) {}
 
   register(email: string, password: string, repeatPassword: string): void {
@@ -27,15 +28,20 @@ export class RegistrationComponent {
         const user: User = userCredential.user;
         console.log('User registered:', user);
 
-        // Save user data to Firestore
+        // Save minimal user data to Firestore
         const userDocRef = doc(this.firestore, `users/${user.uid}`);
         await setDoc(userDocRef, {
           email: user.email,
+          username: null,
+          firstName: null,
+          lastName: null,
+          dateOfBirth: null,
           createdAt: new Date(),
-          role: 'user', // Optional: Add roles or other metadata
+          role: 1, // Default role ID for "user"
         });
 
-        alert('Registration successful and user data saved!');
+        alert('Registration successful!');
+        this.router.navigate(['/profile']); // Redirect to profile page
       })
       .catch((error) => {
         console.error('Error registering user:', error.message);

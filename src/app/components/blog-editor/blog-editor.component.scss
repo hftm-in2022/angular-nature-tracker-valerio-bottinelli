@@ -1,0 +1,62 @@
+.blog-editor-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fcfbe8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    color: #748e55;
+  }
+
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #c49120;
+    border-radius: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:first-child {
+        background-color: #748e55;
+        color: #fcfbe8;
+        border: none;
+
+        &:hover {
+          background-color: #6bba75;
+        }
+      }
+
+      &:last-child {
+        background-color: transparent;
+        border: 1px solid #748e55;
+        color: #748e55;
+
+        &:hover {
+          background-color: #748e55;
+          color: #fcfbe8;
+        }
+      }
+    }
+  }
+}

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 
-// decorator to add metadata to class
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,8 +15,18 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     FooterComponent,
     NavigationComponent,
     RouterOutlet,
+    CommonModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  isCenteredPage = false;
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      const currentRoute = this.router.url;
+      this.isCenteredPage = ['/registration', '/login'].includes(currentRoute);
+    });
+  }
+}
