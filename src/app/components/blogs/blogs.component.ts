@@ -26,6 +26,7 @@ import { ButtonComponent } from '../button/button.component';
 })
 export class BlogsComponent implements OnInit {
   blogs: Blog[] = [];
+
   //pagination
   paginatedBlogs: Blog[] = []; 
   totalBlogs = 0; 
@@ -235,6 +236,10 @@ export class BlogsComponent implements OnInit {
         this.likedBlogs[data['BlogID']] = true;
       }
     });
+  }
+
+  navigateToBlog(blogId: string): void {
+    this.router.navigate(['/blog', blogId]);
   }
   
 }

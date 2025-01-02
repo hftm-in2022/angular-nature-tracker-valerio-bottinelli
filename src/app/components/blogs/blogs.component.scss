@@ -78,5 +78,34 @@
       transform: scale(1.2);
     }
   }
+
+  .blog-item {
+    display: block;
+    width: 100%;
+    background-color: #fcfbe8;
+    border: 1px solid #c49120;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-align: left;
+  
+    &:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+      transition: all 0.2s ease-in-out;
+    }
+  
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px #c49120;
+    }
+  
+    h3 {
+      margin-top: 0;
+      color: #748e55;
+    }
+  }
   
 }
