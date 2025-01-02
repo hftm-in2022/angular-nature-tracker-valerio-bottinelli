@@ -17,12 +17,37 @@
     font-weight: bold;
   }
 
+  .checkbox-group {
+    margin-top: 15px;
+  
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px; /* Space between rows */
+  
+      label {
+        flex: 0 0 120px; /* Align with "Title" label width */
+        font-weight: bold;
+        white-space: nowrap; /* Prevents text wrapping */
+        text-align: left; /* Align the label to the left */
+        margin-right: 10px; /* Space between label and checkbox */
+      }
+  
+      input[type='checkbox'] {
+        transform: scale(1.2); /* Slightly larger checkbox */
+        cursor: pointer;
+      }
+    }
+  }
+  
+
   input,
   textarea {
-    width: 100%;
+    width: 96%;
     margin-top: 5px;
     margin-bottom: 15px;
     padding: 10px;
+    padding-right: 15px;
     border: 1px solid #c49120;
     border-radius: 4px;
   }

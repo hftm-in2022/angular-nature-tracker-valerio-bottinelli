@@ -4,5 +4,6 @@ export interface UserProfile {
   firstName?: string;
   lastName?: string;
   dateOfBirth?: string;
+  blogCount: number;
   role?: number;
 }

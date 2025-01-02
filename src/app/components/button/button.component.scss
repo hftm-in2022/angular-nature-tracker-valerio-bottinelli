@@ -23,3 +23,23 @@ button:hover {
 button:active {
   background-color: #c49120; /* AppColors.color4 */
 }
+
+/* Apply selected styles to the button inside app-button */
+ a{
+  &.selected {
+    background-color: #c49120; /* AppColors.color4 */
+    color: #150722; /* AppColors.color3 */
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+ }
+
+
+
+
+
+
+
+
+

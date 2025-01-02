@@ -2,12 +2,24 @@
   <a routerLink="/home" routerLinkActive="selected">
     <button>Home</button>
   </a>
+
   <a routerLink="/blogs" routerLinkActive="selected">
-    <button>Blogs</button>
+    <app-button>Blogs</app-button>
   </a>
-  <a routerLink="/profile" routerLinkActive="selected">
-    <button>Profile</button>
-  </a>
+
+  <ng-container *ngIf="isLoggedIn">
+    <a routerLink="/profile" routerLinkActive="selected">
+      <app-button [customClass]="'selected'">Profile</app-button>
+    </a>
+  </ng-container>
+
+  <ng-container *ngIf="userRole === 2" >
+    <a  routerLink="/user-management" routerLinkActive="selected">
+      <app-button [customClass]="'selected'">User Management</app-button>
+    </a>
+</ng-container>
+
+
 
   <div class="login-button-container">
     <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
@@ -17,6 +29,10 @@
           <img src="assets/login.png" alt="Login Icon" class="login-icon" />
         </button>
       </a>
+
+    
+
+      
     </ng-container>
     <ng-template #loggedInTemplate>
       <button class="login-button" (click)="logout()">

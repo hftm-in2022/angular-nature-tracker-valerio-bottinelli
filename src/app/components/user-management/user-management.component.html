@@ -1,0 +1,42 @@
+<div class="user-management-container">
+    <h2>User Management</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Blog Count</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Use paginatedUsers instead of users -->
+        <tr *ngFor="let user of paginatedUsers">
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.blogCount }}</td>
+          <td>
+            <select
+              [ngModel]="user.role"
+              (ngModelChange)="updateRole(user.id, $event)"
+              [disabled]="user.id === currentUser?.uid"
+            >
+              <option *ngFor="let role of roles" [value]="role.id">
+                {{ role.name }}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mat-paginator">
+    <mat-paginator
+      [length]="totalUsers"
+      [pageSize]="itemsPerPage"
+      [pageSizeOptions]="[5, 10, 20]"
+      aria-label="Select page">
+    
+    </mat-paginator>
+</div>
+  </div>
+  

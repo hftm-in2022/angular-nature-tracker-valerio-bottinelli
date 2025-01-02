@@ -1,22 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Firestore,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-} from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Blog } from '../../models/blog.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-blog-editor',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './blog-editor.component.html',
-  styleUrls: ['./blog-editor.component.scss'],
+  styleUrls: ['./blog-editor.component.scss']
 })
 export class BlogEditorComponent implements OnInit {
   blog: Blog = {
@@ -27,6 +22,9 @@ export class BlogEditorComponent implements OnInit {
     authorId: '',
     createdAt: new Date(),
     tags: [],
+    allowComments: false, 
+    allowLikes: false, 
+    likes: 0,
   };
   isEditing = false;
 
@@ -34,6 +32,7 @@ export class BlogEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private firestore: Firestore,
+    private auth: Auth 
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -49,32 +48,48 @@ export class BlogEditorComponent implements OnInit {
   }
 
   async saveBlog(): Promise<void> {
-    const blogId = this.route.snapshot.paramMap.get('id'); // Get blog ID from route if editing
-
-    // Check if we are editing or creating a new blog
+    const blogId = this.route.snapshot.paramMap.get('id');
+    const user = this.auth.currentUser;
+  
+    if (!user) {
+      alert('You must be logged in to save a blog.');
+      return;
+    }
+  
+   
+    const authorId = user.uid;
+  
     if (this.isEditing && blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
       await setDoc(blogDocRef, {
         ...this.blog,
+        authorId: authorId, // Save authorId
         tags: Array.isArray(this.blog.tags)
           ? this.blog.tags
           : this.blog.tags.split(',').map((tag) => tag.trim()),
+          allowComments: this.blog.allowComments, 
+          allowLikes: this.blog.allowLikes,
       });
       alert('Blog updated successfully!');
     } else {
       const blogsCollection = collection(this.firestore, 'blogs');
       await setDoc(doc(blogsCollection), {
         ...this.blog,
+        authorId: authorId, // Save authorId
         tags: Array.isArray(this.blog.tags)
           ? this.blog.tags
           : this.blog.tags.split(',').map((tag) => tag.trim()),
         createdAt: new Date(),
+        allowComments: this.blog.allowComments, 
+      allowLikes: this.blog.allowLikes, 
       });
       alert('Blog created successfully!');
     }
-
-    this.goToBlogs(); // Redirect to blogs list after saving
+  
+    this.goToBlogs();
   }
+  
+
 
   goToBlogs(): void {
     this.router.navigate(['/blogs']);

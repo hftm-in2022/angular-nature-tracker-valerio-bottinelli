@@ -6,4 +6,7 @@ export interface Blog {
   authorId: string;
   createdAt: Date;
   tags: string[] | string;
+  allowComments: boolean;
+  allowLikes: boolean;
+  likes: number;
 }

@@ -2,29 +2,36 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { query, where, addDoc, setDoc } from '@angular/fire/firestore';
+
 import {
   Firestore,
   collection,
-  addDoc,
   deleteDoc,
   doc,
   getDocs,
-  updateDoc,
-  getDoc,
 } from '@angular/fire/firestore';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Blog } from '../../models/blog.model';
-import { UserProfile } from '../../models/user.model';
+//import { UserProfile } from '../../models/user.model';
 import { Router } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-blogs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,MatPaginatorModule,ButtonComponent],
   templateUrl: './blogs.component.html',
   styleUrls: ['./blogs.component.scss'],
 })
 export class BlogsComponent implements OnInit {
   blogs: Blog[] = [];
+  //pagination
+  paginatedBlogs: Blog[] = []; 
+  totalBlogs = 0; 
+  itemsPerPage = 5; 
+  currentPage = 1;
+
   isCreating = false;
   isEditing = false;
   currentBlog: Blog = {
@@ -35,9 +42,15 @@ export class BlogsComponent implements OnInit {
     authorId: '',
     createdAt: new Date(),
     tags: [],
+    allowComments: false, // Default value
+    allowLikes: false, 
+    likes: 0,
   };
+
   isLoggedIn = false;
   currentUser: User | null = null;
+  likedBlogs: Record<string, boolean> = {};
+  
 
   constructor(
     private firestore: Firestore,
@@ -46,9 +59,12 @@ export class BlogsComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    onAuthStateChanged(this.auth, (user: User | null) => {
+    onAuthStateChanged(this.auth, async (user: User | null) => {
       this.isLoggedIn = !!user;
       this.currentUser = user;
+      if (user) {
+        await this.loadUserLikes();
+      }
     });
     await this.loadBlogs();
   }
@@ -67,13 +83,17 @@ export class BlogsComponent implements OnInit {
       authorId: '',
       createdAt: new Date(),
       tags: [],
+      allowComments:  false, 
+      allowLikes: false,
+      likes: 0,
     };
   }
+
 
   async loadBlogs(): Promise<void> {
     const blogsCollection = collection(this.firestore, 'blogs');
     const snapshot = await getDocs(blogsCollection);
-
+  
     this.blogs = snapshot.docs.map((doc) => {
       const data = doc.data() as Partial<Blog>;
       return {
@@ -82,73 +102,29 @@ export class BlogsComponent implements OnInit {
         content: data.content || '',
         author: data.author || 'Unknown',
         authorId: data.authorId || '',
-        createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(), // Use as-is if it's already a Date
+        createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
         tags: Array.isArray(data.tags) ? data.tags : [],
+        allowComments: data.allowComments ?? false,
+        allowLikes: data.allowLikes ?? false,
+        likes: data.likes || 0, 
       } as Blog;
     });
+  
+    this.totalBlogs = this.blogs.length;
+    this.updatePaginatedBlogs();
+  }
+  
+
+  updatePaginatedBlogs(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedBlogs = this.blogs.slice(startIndex, endIndex);
   }
 
-  async saveBlog(): Promise<void> {
-    const user = this.auth.currentUser;
-    if (!user) {
-      alert('You need to be logged in to create or edit blogs.');
-      return;
-    }
-
-    // Fetch the user's username from Firestore
-    const userDocRef = doc(this.firestore, `users/${user.uid}`);
-    const userDoc = await getDoc(userDocRef);
-
-    const username = userDoc.exists()
-      ? (userDoc.data() as UserProfile).username
-      : 'Anonymous';
-
-    const blogsCollection = collection(this.firestore, 'blogs');
-    console.log('Current Blog:', this.currentBlog);
-    if (this.isCreating) {
-      await addDoc(blogsCollection, {
-        title: this.currentBlog.title,
-        content: this.currentBlog.content,
-        author: username,
-        authorId: user.uid,
-        createdAt: new Date(),
-        tags:
-          typeof this.currentBlog.tags === 'string'
-            ? this.currentBlog.tags
-                .split(',')
-                .map((tag) => tag.trim())
-                .filter((tag) => tag !== '')
-            : this.currentBlog.tags,
-      });
-    } else if (this.isEditing && this.currentBlog.id) {
-      const blogDoc = doc(this.firestore, `blogs/${this.currentBlog.id}`);
-      await updateDoc(blogDoc, {
-        title: this.currentBlog.title,
-        content: this.currentBlog.content,
-        tags:
-          typeof this.currentBlog.tags === 'string'
-            ? this.currentBlog.tags
-                .split(',')
-                .map((tag) => tag.trim())
-                .filter((tag) => tag !== '')
-            : this.currentBlog.tags,
-        author: username,
-        authorId: user.uid,
-        createdAt: this.currentBlog.createdAt || new Date(),
-      });
-    }
-
-    this.isCreating = false;
-    this.isEditing = false;
-    await this.loadBlogs();
-  }
-
-  editBlog(blog: Blog): void {
-    this.isEditing = true;
-    this.currentBlog = {
-      ...blog,
-      tags: Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags,
-    };
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.itemsPerPage = event.pageSize;
+    this.updatePaginatedBlogs();
   }
 
   async deleteBlog(blogId: string): Promise<void> {
@@ -168,6 +144,10 @@ export class BlogsComponent implements OnInit {
       authorId: '',
       createdAt: new Date(),
       tags: '',
+      allowComments: false, 
+      allowLikes: false,
+      likes: 0,
+
     };
   }
 
@@ -188,4 +168,73 @@ export class BlogsComponent implements OnInit {
     }
     this.router.navigate(['/blogs/edit', blogId]);
   }
+
+
+  /* Likes */
+  async toggleLike(blog: Blog): Promise<void> {
+    if (!this.currentUser) {
+      alert('You must be logged in to like a blog.');
+      return;
+    }
+  
+    const userId = this.currentUser.uid;
+    const blogId = blog.id;
+    const likesCollection = collection(this.firestore, 'likedBlogs');
+  
+    // Check if the user already liked the blog
+    const q = query(
+      likesCollection,
+      where('UserID', '==', userId),
+      where('BlogID', '==', blogId)
+    );
+    const snapshot = await getDocs(q);
+  
+    const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
+    let updatedLikes = blog.likes || 0;
+  
+    if (!snapshot.empty) {
+      // Unlike: Delete the like entry
+      const likeDocRef = snapshot.docs[0].ref;
+      await deleteDoc(likeDocRef);
+  
+      // Update Firestore and UI
+      updatedLikes = Math.max(0, updatedLikes - 1); // Avoid negative likes
+      await setDoc(blogDocRef, { likes: updatedLikes }, { merge: true });
+  
+      blog.likes = updatedLikes;
+      this.likedBlogs[blogId] = false;
+    } else {
+      // Like: Add a new entry
+      await addDoc(likesCollection, {
+        UserID: userId,
+        BlogID: blogId,
+      });
+  
+      // Update Firestore and UI
+      updatedLikes += 1;
+      await setDoc(blogDocRef, { likes: updatedLikes }, { merge: true });
+  
+      blog.likes = updatedLikes;
+      this.likedBlogs[blogId] = true;
+    }
+  }
+  
+
+  async loadUserLikes(): Promise<void> {
+    if (!this.currentUser) {
+      return;
+    }
+    console.log("users likes got loaded");
+    const likesCollection = collection(this.firestore, 'likedBlogs');
+    const q = query(likesCollection, where('UserID', '==', this.currentUser.uid));
+    const snapshot = await getDocs(q);
+  
+    snapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data['BlogID']) {
+        this.likedBlogs[data['BlogID']] = true;
+      }
+    });
+  }
+  
 }

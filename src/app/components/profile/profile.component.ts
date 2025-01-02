@@ -36,6 +36,7 @@ export class ProfileComponent implements OnInit {
             username: '',
             firstName: '',
             lastName: '',
+            blogCount: 0,
             dateOfBirth: '',
             role: 1,
           };
