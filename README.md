@@ -25,3 +25,24 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+ # Instructions
+ 
+ ## Admin Access
+ - Use the following credentials to log in as an admin:
+   - **Email**: `admin@admin.ch`
+   - **Password**: `admin@admin.ch`
+ - As the admin user, you can access and utilize all admin-specific functions in the application.
+
+ ## Creating a New User
+ - To create a new user, simply navigate to the **Registration** page and fill out the required information.
+
+ ## Blog Management
+ - Each user has full control over their own blogs:
+   - You can edit or delete the blogs you have created.
+
+ ## Liking Blogs
+ - Every user can like any of the blogs, as long as the following conditions are met:
+   - The blog was created after the implementation of the likes feature.
+   - Likes are enabled for the specific blog.

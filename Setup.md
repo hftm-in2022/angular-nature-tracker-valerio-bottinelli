@@ -608,3 +608,100 @@ export class NavigationComponent implements OnInit {
   </div>
 </nav>
 ```
+
+ # Documentation: User Management and Blog Likes
+ 
+ ## User Management
+ 
+ ### What We Implemented
+ - A **User Management** component that allows users to view and manage other users.
+ - Features include:
+   - Pagination for user lists.
+   - The ability for admins to modify user roles.
+ 
+ ### How It Works
+ 
+ #### Pagination
+ - We used Angular Material's `MatPaginator` component to paginate the user list.
+ - The paginator interacts with the `onPageChange` function in the component, which dynamically updates the displayed users based on the current page and items per page.
+ 
+ ```typescript
+ onPageChange(event: PageEvent): void {
+   const startIndex = event.pageIndex * event.pageSize;
+   const endIndex = startIndex + event.pageSize;
+   this.paginatedUsers = this.allUsers.slice(startIndex, endIndex);
+ }
+ ```
+ - **Explanation**: This function calculates the start and end indices of users to display on the current page, ensuring the table updates seamlessly.
+ 
+ #### Role Management
+ - Admins can change user roles using a dropdown. The changes are reflected in Firestore using Angular Fire's `updateDoc` method.
+ - We used the `ngModel` directive to bind the selected role to the dropdown and update the Firestore entry when the role changes.
+ 
+ ```html
+ <select [ngModel]="user.role" (ngModelChange)="updateRole(user.id, $event)">
+   <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+ </select>
+ ```
+ - **Explanation**: This dropdown allows real-time updates to user roles by syncing the selected value with Firestore.
+
+ ---
+
+ ## Blog Likes
+ 
+ ### What We Implemented
+ - A **Blog Likes** feature that enables users to like blogs and displays the like count dynamically.
+ - The like functionality includes:
+   - Tracking likes per user and blog using a `likedBlogs` collection in Firestore.
+   - Displaying a heart icon that toggles between outlined and solid states based on the user's like status.
+
+ ### How It Works
+ 
+ #### Liking Blogs
+ - When a user clicks the heart icon, the `toggleLike` method is triggered. This method:
+   1. Checks if the user has already liked the blog using Firestore's `query` and `where` functions.
+   2. Adds or removes an entry in the `likedBlogs` collection based on the user's action.
+   3. Updates the like counter in the `blogs` collection to reflect the total likes.
+ 
+ ```typescript
+ async toggleLike(blog: Blog): Promise<void> {
+   const q = query(likesCollection, where('UserID', '==', userId), where('BlogID', '==', blogId));
+   const snapshot = await getDocs(q);
+   if (!snapshot.empty) {
+     await deleteDoc(snapshot.docs[0].ref);
+     blog.likes = Math.max(0, (blog.likes || 0) - 1);
+   } else {
+     await addDoc(likesCollection, { UserID: userId, BlogID: blogId });
+     blog.likes = (blog.likes || 0) + 1;
+   }
+   await setDoc(blogDocRef, { likes: blog.likes }, { merge: true });
+ }
+ ```
+ - **Explanation**: This method dynamically updates Firestore and the UI to reflect the like/unlike action.
+ 
+ #### Displaying Likes
+ - The heart icon and like counter are dynamically updated using Angular's `*ngIf` and `property binding`:
+ 
+ ```html
+ <img
+   [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
+   alt="Like"
+   (click)="toggleLike(blog)"
+ />
+ <span>{{ blog.likes || 0 }}</span>
+ ```
+ - **Explanation**: The heart icon switches between solid and outlined states based on the `likedBlogs` state, and the like count is displayed next to it.
+
+ ---
+
+ ### Angular Tools and Functions Used
+ - **`MatPaginator`**: For implementing pagination in the User Management component.
+ - **`ngModel`**: For two-way data binding in role management and like functionality.
+ - **`query`, `where`, `getDocs`, `addDoc`, `deleteDoc`, `setDoc`**: Angular Fire functions for interacting with Firestore.
+ - **Directives (`*ngIf`, `*ngFor`)**: For conditional rendering and looping over user and blog data.
+
+ ---
+
+ ## Conclusion
+ - The User Management and Blog Likes features enhance the application by providing a robust way to manage users and interact with blogs.
+ - The combination of Angular Material, Angular Fire, and clean UI design ensures a seamless user experience.
