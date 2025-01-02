@@ -9,19 +9,17 @@
     <p *ngIf="!isLoggedIn" class="login-warning">Log in to create a blog.</p>
   </div>
 
-   <!-- Paginator -->
-   <mat-paginator
-   [length]="totalBlogs"
-   [pageSize]="itemsPerPage"
-   [pageSizeOptions]="[5, 10, 20]"
-   (page)="onPageChange($event)"
- >
- </mat-paginator>
-
-
+  <!-- Paginator -->
+  <mat-paginator
+    [length]="totalBlogs"
+    [pageSize]="itemsPerPage"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
 
   <!-- List of Blogs -->
-  <div *ngFor="let blog of paginatedBlogs" class="blog-item">
+  <button *ngFor="let blog of paginatedBlogs" class="blog-item" (click)="navigateToBlog(blog.id)">
     <h3>{{ blog.title }}</h3>
     <p><strong>Author:</strong> {{ blog.author }}</p>
     <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
@@ -39,15 +37,12 @@
       <span class="like-counter">{{ blog.likes || 0 }}</span>
     </div>
 
-
-    
-
     <!-- Blog Actions (Only for Blog Owner) -->
     <div class="blog-actions" *ngIf="blog.authorId === currentUser?.uid">
       <button (click)="navigateToEdit(blog.id)">Edit</button>
       <button (click)="deleteBlog(blog.id)">Delete</button>
     </div>
-  </div>
+  </button>
 
   <!-- Paginator -->
   <mat-paginator

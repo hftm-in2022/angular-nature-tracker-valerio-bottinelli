@@ -5,6 +5,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { BlogEditorComponent } from './components/blog-editor/blog-editor.component';
+import { SingleBlogComponent } from './components/single-blog/single-blog.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 
 export const routes: Routes = [
@@ -16,4 +17,5 @@ export const routes: Routes = [
   { path: 'blogs/create', component: BlogEditorComponent },
   { path: 'blogs/edit/:id', component: BlogEditorComponent },
   { path: 'user-management', component: UserManagementComponent},
-];
+  { path: 'blog/:id', component: SingleBlogComponent },
+]

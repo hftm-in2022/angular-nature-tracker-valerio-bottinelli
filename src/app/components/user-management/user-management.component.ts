@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, doc, getDocs, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -102,16 +102,24 @@ export class UserManagementComponent implements OnInit {
     const snapshot = await getDocs(usersCollection);
   
     // Load all users into the allUsers array
-    this.allUsers = snapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        username: data['username'] || 'N/A',
-        email: data['email'] || 'N/A',
-        role: data['role'],
-        blogCount: 5, // Dummy value
-      } as UserProfile;
-    });
+    this.allUsers = await Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const data = doc.data();
+  
+        // Fetch the blog count for each user
+        const blogsCollection = collection(this.firestore, 'blogs');
+        const q = query(blogsCollection, where('authorId', '==', doc.id));
+        const blogsSnapshot = await getDocs(q);
+  
+        return {
+          id: doc.id,
+          username: data['username'] || 'N/A',
+          email: data['email'] || 'N/A',
+          role: data['role'],
+          blogCount: blogsSnapshot.size, // Dynamic blog count
+        } as UserProfile;
+      })
+    );
   
     // Set total users for pagination
     this.totalUsers = this.allUsers.length;

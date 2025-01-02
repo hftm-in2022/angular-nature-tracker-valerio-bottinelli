@@ -1,0 +1,26 @@
+<div class="blog-view-container" *ngIf="blog">
+    <h1>{{ blog.title }}</h1>
+    <p><strong>Author:</strong> {{ blog.author }}</p>
+    <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
+    <p>{{ blog.content }}</p>
+    <p><strong>Tags:</strong> {{ getFormattedTags(blog.tags) }}</p>
+  
+    <!-- Likes Section -->
+    <div class="likes-section" *ngIf="blog.allowLikes">
+      <button
+        class="like-button"
+        (click)="toggleLike(blog)"
+        aria-label="Toggle Like"
+      >
+        <img
+          [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
+          alt="Like"
+          class="like-icon"
+        />
+      </button>
+      <span class="like-counter">{{ blog.likes || 0 }}</span>
+    </div>
+  
+    <button (click)="goToBlogs()">Back to Blogs</button>
+  </div>
+  
