@@ -7,3 +7,4 @@ bootstrapApplication(AppComponent, appConfig).catch((err) =>
 );
 
 console.log('Firebase initialized via provideFirebaseApp.');
+

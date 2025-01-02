@@ -1,0 +1,40 @@
+.user-management-container {
+    margin: 2rem auto;
+    width: 80%;
+    text-align: center;
+
+
+    mat-paginator {
+        margin-top: 16px;
+      }
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #748e55; /* AppColors.color1 */
+    color: #fcfbe8; /* AppColors.color5 */
+  }
+  
+  td select {
+    padding: 5px;
+    border-radius: 4px;
+    background-color: #fcfbe8;
+    border: 1px solid #c49120; /* AppColors.color4 */
+    font-size: 1rem;
+  }
+
+
+
+
+
+  

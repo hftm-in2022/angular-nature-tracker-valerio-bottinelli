@@ -17,6 +17,7 @@
       name="content"
       required
       placeholder="Write your blog content"
+      rows="10"
     ></textarea>
 
     <label for="tags">Tags (comma separated):</label>
@@ -26,6 +27,30 @@
       name="tags"
       placeholder="Add tags"
     />
+    <div class="checkbox-group">
+      <div class="checkbox-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="blog.allowComments"
+            name="allowComments"
+          />
+          Allow Comments
+        </label>
+      </div>
+    
+      <div class="checkbox-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="blog.allowLikes"
+            name="allowLikes"
+          />
+          Allow Likes
+        </label>
+      </div>
+    </div>
+
 
     <div class="form-actions">
       <button type="submit">
