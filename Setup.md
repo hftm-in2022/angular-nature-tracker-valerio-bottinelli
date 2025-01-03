@@ -705,3 +705,50 @@ export class NavigationComponent implements OnInit {
  ## Conclusion
  - The User Management and Blog Likes features enhance the application by providing a robust way to manage users and interact with blogs.
  - The combination of Angular Material, Angular Fire, and clean UI design ensures a seamless user experience.
+
+
+## Overview
+The `AuthGuard` is used to restrict access to specific routes based on the user's authentication and role. 
+This ensures that unauthorized users cannot access protected resources like `/user-management`.
+
+## Features
+- Verifies if a user is logged in using Firebase Authentication.
+- Checks the user's role from Firestore (e.g., `admin`).
+- Redirects unauthorized users to the `/home` page.
+
+## Implementation Details
+
+### 1. Guard Implementation
+The `AuthGuard` is a class-based guard that implements the `CanActivate` interface. Below is a summary of its logic:
+- Uses Firebase `onAuthStateChanged` to check authentication state.
+- Queries Firestore to verify the user's role.
+- Grants or denies access based on the role.
+
+### 2. Route Configuration
+Apply the `AuthGuard` to routes that require restricted access. For example:
+
+#### Code Snippet
+```typescript
+import { Routes } from '@angular/router';
+import { UserManagementComponent } from './components/user-management/user-management.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuthGuard } from './guards/auth.guard';
+
+export const routes: Routes = [
+  { path: 'home', component: HomeComponent },
+  // { path: 'user-management', component: UserManagementComponent},
+  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] }, 
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home' },
+];
+```
+
+### 3. Firebase Authentication
+- The `AuthGuard` uses Firebase `onAuthStateChanged` to detect the logged-in state of the user.
+- The user's ID (`uid`) is then used to query their role in Firestore.
+## Lessons Learned
+- **Route Order Matters**: The first matching route is used by Angular.
+- **Guard Execution**: Add `console.log` statements in the guard during development to verify its execution.
+
+## Conclusion
+The `AuthGuard` ensures secure access control for sensitive routes in the application. By combining Firebase Authentication and Firestore, it provides a robust solution for role-based access control.

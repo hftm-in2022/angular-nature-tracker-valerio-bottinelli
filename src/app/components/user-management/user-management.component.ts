@@ -116,7 +116,7 @@ export class UserManagementComponent implements OnInit {
           username: data['username'] || 'N/A',
           email: data['email'] || 'N/A',
           role: data['role'],
-          blogCount: blogsSnapshot.size, // Dynamic blog count
+          blogCount: blogsSnapshot.size, 
         } as UserProfile;
       })
     );

@@ -1,6 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Firestore, doc, getDoc, query, where, getDocs, collection, addDoc, deleteDoc, setDoc } from '@angular/fire/firestore';
+import { 
+  Firestore, 
+  doc, 
+  getDoc, 
+  query, 
+  where, 
+  getDocs, 
+  collection, 
+  addDoc, 
+  deleteDoc, 
+  setDoc,
+} from '@angular/fire/firestore';
 import { Blog } from '../../models/blog.model';
 import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
