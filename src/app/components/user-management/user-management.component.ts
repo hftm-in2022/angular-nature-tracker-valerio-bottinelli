@@ -36,6 +36,7 @@ export class UserManagementComponent implements OnInit {
   roles: Role[] = [];
   currentUser: User | null = null; 
   isLoggedIn = false;
+  isLoading = true;
   
   //pagination
   allUsers: UserProfile[] = []; 
@@ -47,6 +48,7 @@ export class UserManagementComponent implements OnInit {
   constructor(private firestore: Firestore, private auth: Auth) {}
 
   async ngOnInit(): Promise<void> {
+    this.isLoading = true;
     
     onAuthStateChanged(this.auth, (user: User | null) => {
       this.currentUser = user;
@@ -55,6 +57,7 @@ export class UserManagementComponent implements OnInit {
 
     await this.loadRoles();
     await this.loadUsers();
+    this.isLoading = false;
   }
 
   async loadRoles(): Promise<void> {
@@ -67,64 +70,34 @@ export class UserManagementComponent implements OnInit {
     }));
   }
 
-  // async loadUsers(): Promise<void> {
-  //   const usersCollection = collection(this.firestore, 'users');
-  //   const snapshot = await getDocs(usersCollection);
-
-  //   this.users = snapshot.docs.map(doc => {
-  //     const data = doc.data();
-  //     return {
-  //       id: doc.id,
-  //       username: data['username'] || 'N/A',
-  //       email: data['email'] || 'N/A',
-  //       role: data['role'],
-  //       blogCount: 5, // Dummy value
-  //     } as UserProfile;
-  //   });
-
-  //   this.allUsers = snapshot.docs.map(doc => {
-  //     const data = doc.data();
-  //     return {
-  //       id: doc.id,
-  //       username: data['username'] || 'N/A',
-  //       email: data['email'] || 'N/A',
-  //       role: data['role'],
-  //       blogCount: 5, // Dummy value
-  //     } as UserProfile;
-  //   });
-  
-  //   this.totalUsers = this.allUsers.length;
-  //   this.updatePaginatedUsers();
-  // }
-
   async loadUsers(): Promise<void> {
     const usersCollection = collection(this.firestore, 'users');
     const snapshot = await getDocs(usersCollection);
   
-    // Load all users into the allUsers array
-    this.allUsers = await Promise.all(
-      snapshot.docs.map(async (doc) => {
-        const data = doc.data();
+    // Temporarily hold users data
+    const tempUsers: UserProfile[] = [];
   
-        // Fetch the blog count for each user
-        const blogsCollection = collection(this.firestore, 'blogs');
-        const q = query(blogsCollection, where('authorId', '==', doc.id));
-        const blogsSnapshot = await getDocs(q);
+    for (const docSnapshot of snapshot.docs) {
+      const data = docSnapshot.data();
   
-        return {
-          id: doc.id,
-          username: data['username'] || 'N/A',
-          email: data['email'] || 'N/A',
-          role: data['role'],
-          blogCount: blogsSnapshot.size, 
-        } as UserProfile;
-      })
-    );
+      // Fetch blog count for the user
+      const blogsCollection = collection(this.firestore, 'blogs');
+      const q = query(blogsCollection, where('authorId', '==', docSnapshot.id));
+      const blogsSnapshot = await getDocs(q);
   
-    // Set total users for pagination
-    this.totalUsers = this.allUsers.length;
+      // Push user profile to the temporary array
+      tempUsers.push({
+        id: docSnapshot.id,
+        username: data['username'] || 'N/A',
+        email: data['email'] || 'N/A',
+        role: data['role'],
+        blogCount: blogsSnapshot.size, 
+      } as UserProfile);
+    }
   
-    // Initialize the paginated users (first page)
+    // Assign to `allUsers` and update pagination
+    this.allUsers = tempUsers;
+    this.totalUsers = tempUsers.length;
     this.updatePaginatedUsers();
   }
 

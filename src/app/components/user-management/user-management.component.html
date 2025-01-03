@@ -1,16 +1,23 @@
 <div class="user-management-container">
-    <h2>User Management</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Blog Count</th>
-          <th>Role</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Use paginatedUsers instead of users -->
+  <h2>User Management</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Blog Count</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loading Indicator -->
+      <tr *ngIf="isLoading">
+        <td colspan="4" class="loading-indicator">Loading users...</td>
+      </tr>
+
+      <!-- User Rows -->
+      <ng-container *ngIf="!isLoading">
         <tr *ngFor="let user of paginatedUsers">
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
@@ -27,16 +34,18 @@
             </select>
           </td>
         </tr>
-      </tbody>
-    </table>
-    <div class="mat-paginator">
+      </ng-container>
+    </tbody>
+  </table>
+
+  <div class="mat-paginator">
     <mat-paginator
       [length]="totalUsers"
       [pageSize]="itemsPerPage"
       [pageSizeOptions]="[5, 10, 20]"
-      aria-label="Select page">
+      (page)="onPageChange($event)"
+      aria-label="Select page"
     >
     </mat-paginator>
-</div>
   </div>
-  
+</div>

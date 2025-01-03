@@ -10,6 +10,7 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent },
   { path: 'blogs', component: BlogsComponent },
   { path: 'profile', component: ProfileComponent },
@@ -17,11 +18,11 @@ export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'blogs/create', component: BlogEditorComponent },
   { path: 'blogs/edit/:id', component: BlogEditorComponent },
- // { path: 'user-management', component: UserManagementComponent},
+
   { path: 'blog/:id', component: SingleBlogComponent },
   //Default Routes
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
   //Authentification guards
-  { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
+  
 ]
