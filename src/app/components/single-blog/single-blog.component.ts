@@ -126,7 +126,7 @@ export class SingleBlogComponent implements OnInit {
     
   
     const userId = this.currentUser.uid;
-    const blogDocId = blog.id; // Ensure this is the Firestore document ID
+    const blogDocId = blog.id; 
     const likesCollection = collection(this.firestore, 'likedBlogs');
     
   
@@ -160,7 +160,7 @@ export class SingleBlogComponent implements OnInit {
       console.log('Updated likes:', updatedLikes);
     }
   
-    // Update the local blog object
+    
     this.blog.likes = updatedLikes;
   }
   
@@ -174,7 +174,6 @@ export class SingleBlogComponent implements OnInit {
     const q = query(commentsCollection, where('BlogID', '==', blogId));
     const snapshot = await getDocs(q);
   
-    // Map comments to an array
     this.commentsarray = snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
@@ -186,13 +185,10 @@ export class SingleBlogComponent implements OnInit {
       } as Comment;
     });
   
-    // Count the number of comments
     const commentCount = this.commentsarray.length;
   
-    // Update the local blog object
     this.blog.comments = commentCount;
   
-    // Optionally, update Firestore with the correct comment count
     const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
     await updateDoc(blogDocRef, { comments: commentCount });
   }
@@ -224,7 +220,6 @@ export class SingleBlogComponent implements OnInit {
       content: this.newComment,
       createdAt: new Date(),
     });
-
 
     this.newComment = '';
     await this.loadComments(blogId);
