@@ -11,11 +11,16 @@ import {
   addDoc, 
   deleteDoc, 
   setDoc,
+  orderBy,
+  updateDoc,
+  increment,
+  arrayUnion,
 } from '@angular/fire/firestore';
 import { Blog } from '../../models/blog.model';
 import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Comment } from '../../models/comment.model';
 
 @Component({
   selector: 'app-single-blog',
@@ -36,10 +41,14 @@ export class SingleBlogComponent implements OnInit {
     allowComments: false,
     allowLikes: false,
     likes: 0,
+    comments: 0,
   };
 
   likedBlogs: Record<string, boolean> = {};
   currentUser: User | null = null;
+  commentsarray: Comment[] = [];
+  newComment = ''; 
+  userMap: Record<string, string> = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -49,21 +58,29 @@ export class SingleBlogComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // Fetch the blog by ID
     const blogId = this.route.snapshot.paramMap.get('id');
     if (blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
       const blogDoc = await getDoc(blogDocRef);
-
+  
       if (blogDoc.exists()) {
-        this.blog = { id: blogDoc.id, ...blogDoc.data() } as Blog;
+        const data = blogDoc.data();
+        this.blog = {
+          ...data,
+          id: blogDoc.id, 
+          createdAt: data['createdAt'] ? new Date(data['createdAt'].toMillis()) : new Date(),
+        } as Blog;
+  
+        console.log('Blog loaded in ngOnInit:', this.blog);
+  
+        await this.loadUsers(); // Load user data
+        await this.loadComments(blogId); // Load comments
       } else {
         alert('Blog not found.');
         this.router.navigate(['/blogs']);
       }
     }
-
-    // Fetch the current user
+  
     onAuthStateChanged(this.auth, async (user: User | null) => {
       this.currentUser = user;
       if (user) {
@@ -71,6 +88,18 @@ export class SingleBlogComponent implements OnInit {
       }
     });
   }
+
+  async loadUsers(): Promise<void> {
+    const usersCollection = collection(this.firestore, 'users');
+    const snapshot = await getDocs(usersCollection);
+  
+    this.userMap = snapshot.docs.reduce((acc, doc) => {
+      const data = doc.data();
+      acc[doc.id] = data['username'] || 'Anonymous';
+      return acc;
+    }, {} as Record<string, string>);
+  }
+  
 
   async loadUserLikes(): Promise<void> {
     if (!this.currentUser) {
@@ -94,44 +123,108 @@ export class SingleBlogComponent implements OnInit {
       alert('You must be logged in to like a blog.');
       return;
     }
-
+    
+  
     const userId = this.currentUser.uid;
-    const blogId = blog.id;
+    const blogDocId = blog.id; 
     const likesCollection = collection(this.firestore, 'likedBlogs');
-
+    
+  
     // Check if the user has already liked the blog
-    const q = query(likesCollection, where('UserID', '==', userId), where('BlogID', '==', blogId));
+    const q = query(likesCollection, where('UserID', '==', userId), where('BlogID', '==', blogDocId));
     const snapshot = await getDocs(q);
-
-    const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
+  
+    const blogDocRef = doc(this.firestore, `blogs/${blogDocId}`);
     let updatedLikes = blog.likes || 0;
 
+  
     if (!snapshot.empty) {
       // Unlike the blog
       const likeDocRef = snapshot.docs[0].ref;
       await deleteDoc(likeDocRef);
-
+  
       updatedLikes = Math.max(0, updatedLikes - 1);
-      this.likedBlogs[blogId] = false;
-
-      await setDoc(blogDocRef, { likes: updatedLikes }, { merge: true });
+      this.likedBlogs[blogDocId] = false;
+  
+      await updateDoc(blogDocRef, { likes: updatedLikes });
     } else {
       // Like the blog
-      await addDoc(likesCollection, { UserID: userId, BlogID: blogId });
-
+      await addDoc(likesCollection, { UserID: userId, BlogID: blogDocId });
+  
       updatedLikes += 1;
-      this.likedBlogs[blogId] = true;
-
-      await setDoc(blogDocRef, { likes: updatedLikes }, { merge: true });
+      this.likedBlogs[blogDocId] = true;
+  
+      await updateDoc(blogDocRef, { likes: updatedLikes });
+      console.log('Blog ID used for toggleLike:', blogDocId);
+      console.log('Current User ID:', userId);
+      console.log('Updated likes:', updatedLikes);
     }
-
-    // Update the local blog object
+  
+    
     this.blog.likes = updatedLikes;
   }
+  
 
   getFormattedTags(tags: string | string[]): string {
     return Array.isArray(tags) ? tags.join(', ') : tags || '';
   }
+
+  async loadComments(blogId: string): Promise<void> {
+    const commentsCollection = collection(this.firestore, 'comments');
+    const q = query(commentsCollection, where('BlogID', '==', blogId));
+    const snapshot = await getDocs(q);
+  
+    this.commentsarray = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        BlogID: data['BlogID'] || '',
+        UserID: data['UserID'] || '',
+        content: data['content'] || '',
+        createdAt: data['createdAt'] ? new Date(data['createdAt'].toMillis()) : new Date(),
+      } as Comment;
+    });
+  
+    const commentCount = this.commentsarray.length;
+  
+    this.blog.comments = commentCount;
+  
+    const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
+    await updateDoc(blogDocRef, { comments: commentCount });
+  }
+  
+
+  async addComment(): Promise<void> {
+    const blogId = this.route.snapshot.paramMap.get('id');
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      alert('You must be logged in to add a comment.');
+      return;
+    }
+
+    if (!this.newComment.trim()) {
+      alert('Comment cannot be empty.');
+      return;
+    }
+
+    if (!blogId) {
+      alert('Invalid blog ID.');
+      return;
+    }
+
+    const commentsCollection = collection(this.firestore, 'comments');
+    await addDoc(commentsCollection, {
+      BlogID: blogId,
+      UserID: user.uid,
+      content: this.newComment,
+      createdAt: new Date(),
+    });
+
+    this.newComment = '';
+    await this.loadComments(blogId);
+  }
+
 
   goToBlogs(): void {
     this.router.navigate(['/blogs']);

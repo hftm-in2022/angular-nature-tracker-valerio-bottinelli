@@ -20,7 +20,33 @@
       </button>
       <span class="like-counter">{{ blog.likes || 0 }}</span>
     </div>
+
+    <div class="comments-section">
+      <h3>Comments ({{ blog.comments || 0 }})</h3>
+    
   
     <button (click)="goToBlogs()">Back to Blogs</button>
+
+
+  </div>
+<hr/>
+  <div class="comments-section">
+    <h3>Comments ({{ blog.comments || 0 }})</h3>
+
+      <!-- Add New Comment -->
+      <div class="add-comment" *ngIf="blog?.allowComments">
+        <textarea [(ngModel)]="newComment" placeholder="Write a comment"></textarea>
+        <button (click)="addComment()">Add Comment</button>
+      </div>
+  
+    <!-- Display Existing Comments -->
+    <div *ngFor="let comment of commentsarray" class="comment-item">
+      <p><strong>{{ userMap[comment.UserID] || 'Anonymous' }}</strong>:</p>
+         <p> {{ comment.content }}</p>
+      <p class="timestamp">{{ comment.createdAt | date }}</p>
+      <hr/>
+    </div>
+  
+   
   </div>
   

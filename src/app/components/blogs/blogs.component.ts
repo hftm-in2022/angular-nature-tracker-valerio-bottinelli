@@ -46,6 +46,7 @@ export class BlogsComponent implements OnInit {
     allowComments: false, // Default value
     allowLikes: false, 
     likes: 0,
+    comments: 0,
   };
 
   isLoggedIn = false;
@@ -87,6 +88,7 @@ export class BlogsComponent implements OnInit {
       allowComments:  false, 
       allowLikes: false,
       likes: 0,
+      comments: 0,
     };
   }
 
@@ -108,6 +110,7 @@ export class BlogsComponent implements OnInit {
         allowComments: data.allowComments ?? false,
         allowLikes: data.allowLikes ?? false,
         likes: data.likes || 0, 
+        comments: data.comments || 0,
       } as Blog;
     });
   
@@ -148,7 +151,7 @@ export class BlogsComponent implements OnInit {
       allowComments: false, 
       allowLikes: false,
       likes: 0,
-
+      comments: 0,
     };
   }
 
