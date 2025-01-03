@@ -16,6 +16,7 @@ import { Blog } from '../../models/blog.model';
 //import { UserProfile } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../button/button.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-blogs',
@@ -52,15 +53,37 @@ export class BlogsComponent implements OnInit {
   isLoggedIn = false;
   currentUser: User | null = null;
   likedBlogs: Record<string, boolean> = {};
+  isOnAllBlogsRoute = false;
   
 
   constructor(
     private firestore: Firestore,
     private auth: Auth,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
-
+  
+//initialization
   async ngOnInit(): Promise<void> {
+
+    this.route.url.subscribe((segments) => {
+      this.isOnAllBlogsRoute = segments.map(seg => seg.path).join('/') === 'blogs';
+    });
+
+    this.route.paramMap.subscribe(async (params) => {
+      const tag = params.get('tag');
+      
+      if (tag) {
+        // Load blogs by tag
+        console.log("Tag selected: "+tag);
+        await this.loadBlogsByTag(tag); 
+      } else {
+        // Load all blogs
+        console.log("all blogs displayed");
+        await this.loadBlogs(); 
+      }
+    });
+
     onAuthStateChanged(this.auth, async (user: User | null) => {
       this.isLoggedIn = !!user;
       this.currentUser = user;
@@ -68,7 +91,38 @@ export class BlogsComponent implements OnInit {
         await this.loadUserLikes();
       }
     });
-    await this.loadBlogs();
+
+   
+  }
+
+  async loadBlogsByTag(tag: string): Promise<void> {
+    const blogsCollection = collection(this.firestore, 'blogs');
+    const q = query(blogsCollection, where('tags', 'array-contains', tag));
+    const snapshot = await getDocs(q);
+  
+    this.blogs = snapshot.docs.map((doc) => {
+      const data = doc.data() as Partial<Blog>;
+      return {
+        id: doc.id,
+        title: data.title || '',
+        content: data.content || '',
+        author: data.author || 'Unknown',
+        authorId: data.authorId || '',
+        createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+        tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []), 
+        allowComments: data.allowComments ?? false,
+        allowLikes: data.allowLikes ?? false,
+        likes: data.likes || 0,
+        comments: data.comments || 0,
+      } as Blog;
+    });
+  
+    this.totalBlogs = this.blogs.length;
+    this.updatePaginatedBlogs();
+  }
+
+  filterByTag(tag: string): void {
+    this.router.navigate(['/blogs', tag]);
   }
 
   openCreateForm(): void {
@@ -106,7 +160,7 @@ export class BlogsComponent implements OnInit {
         author: data.author || 'Unknown',
         authorId: data.authorId || '',
         createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
-        tags: Array.isArray(data.tags) ? data.tags : [],
+        tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []), 
         allowComments: data.allowComments ?? false,
         allowLikes: data.allowLikes ?? false,
         likes: data.likes || 0, 
@@ -131,7 +185,8 @@ export class BlogsComponent implements OnInit {
     this.updatePaginatedBlogs();
   }
 
-  async deleteBlog(blogId: string): Promise<void> {
+  async deleteBlog(blogId: string, event: Event): Promise<void> {
+    event.stopPropagation();
     const blogDoc = doc(this.firestore, `blogs/${blogId}`);
     await deleteDoc(blogDoc);
     await this.loadBlogs();
@@ -147,7 +202,7 @@ export class BlogsComponent implements OnInit {
       author: '',
       authorId: '',
       createdAt: new Date(),
-      tags: '',
+      tags: [],
       allowComments: false, 
       allowLikes: false,
       likes: 0,
@@ -155,17 +210,21 @@ export class BlogsComponent implements OnInit {
     };
   }
 
-  getFormattedTags(tags: string | string[]): string {
-    return Array.isArray(tags) ? tags.join(', ') : tags;
+  getFormattedTags(tags: string | string[]): string[] {
+    if (Array.isArray(tags)) {
+      return tags;
+    }
+    return tags.split(',').map((tag) => tag.trim());
   }
 
   //Navigation
-
   navigateToCreate(): void {
+    console.log("navigateToCreate is called");
     this.router.navigate(['/blogs/create']);
   }
 
-  navigateToEdit(blogId: string): void {
+  navigateToEdit(blogId: string, event: Event): void {
+    event.stopPropagation();
     const blog = this.blogs.find((b) => b.id === blogId);
     if (blog) {
       console.log('Navigating to edit blog:', blog.title);
@@ -173,9 +232,21 @@ export class BlogsComponent implements OnInit {
     this.router.navigate(['/blogs/edit', blogId]);
   }
 
+  navigateToTag(tag: string, event: Event): void {
+    event.stopPropagation(); 
+
+    console.log("navigation to blogview with tags: "+tag);
+    this.router.navigate(['/blogs', tag]);
+  }
+
+  navigateToBlogs(): void {
+    this.router.navigate(['/blogs']);
+  }
+
 
   /* Likes */
-  async toggleLike(blog: Blog): Promise<void> {
+  async toggleLike(blog: Blog,  event: Event): Promise<void> {
+    event.stopPropagation();
     if (!this.currentUser) {
       alert('You must be logged in to like a blog.');
       return;
