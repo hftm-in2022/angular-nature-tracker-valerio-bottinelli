@@ -25,6 +25,7 @@ export class BlogEditorComponent implements OnInit {
     allowComments: false, 
     allowLikes: false, 
     likes: 0,
+    comments: 0,
   };
   isEditing = false;
 

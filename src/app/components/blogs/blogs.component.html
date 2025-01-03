@@ -21,20 +21,37 @@
   <!-- List of Blogs -->
   <button *ngFor="let blog of paginatedBlogs" class="blog-item" (click)="navigateToBlog(blog.id)">
     <h3>{{ blog.title }}</h3>
-    <p><strong>Author:</strong> {{ blog.author }}</p>
-    <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
     <p>{{ blog.content }}</p>
     <p><strong>Tags:</strong> {{ getFormattedTags(blog.tags) }}</p>
+    <hr />
+    <p><strong>Author:</strong> {{ blog.author }}</p>
+    <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
+    
 
-    <div class="likes" *ngIf="blog.allowLikes">
-      <button class="like-button" (click)="toggleLike(blog)" aria-label="Toggle Like">
-        <img
-          [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
-          alt="Like"
-          class="like-icon"
-        />
-      </button>
-      <span class="like-counter">{{ blog.likes || 0 }}</span>
+    <div class="likes">
+      <ng-container *ngIf="blog.allowLikes; else likesNotAllowed">
+        <button class="like-button" (click)="toggleLike(blog)" aria-label="Toggle Like">
+          <img
+            [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
+            alt="Like"
+            class="like-icon"
+          />
+        </button>
+        <span class="like-counter">{{ blog.likes || 0 }}</span>
+      </ng-container>
+      <ng-template #likesNotAllowed>
+        <span class="not-allowed">Likes not allowed</span>
+      </ng-template>
+    </div>
+    
+    <div class="comments">
+      <ng-container *ngIf="blog.comments !== undefined; else commentsNotAllowed">
+        <p><strong>Comments: </strong> 
+        <span class="comment-counter">{{ blog.comments || 0 }}</span></p>
+      </ng-container>
+      <ng-template #commentsNotAllowed>
+        <span class="not-allowed">Comments not allowed</span>
+      </ng-template>
     </div>
 
     <!-- Blog Actions (Only for Blog Owner) -->
