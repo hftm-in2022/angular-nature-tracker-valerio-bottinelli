@@ -28,6 +28,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 
  # Instructions
+
+ ## Open the Website
+  - Go to [Nature Tracker Website](https://salmon-grass-091c45003.5.azurestaticapps.net/) to access the application.
  
  ## Admin Access
  - Use the following credentials to log in as an admin:
