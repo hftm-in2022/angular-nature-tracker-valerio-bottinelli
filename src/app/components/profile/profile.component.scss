@@ -1,46 +1,69 @@
 .profile-container {
   max-width: 600px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fcfbe8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   h2 {
     text-align: center;
-    margin-bottom: 20px;
+    color: #748e55;
+    margin-bottom: 15px;
   }
 
   p {
     margin: 10px 0;
+    color: #333;
+    strong {
+      color: #748e55; 
+    }
   }
 
   label {
     display: block;
     margin: 10px 0 5px;
     font-weight: bold;
+    color: #748e55; 
   }
 
   input {
-    width: 100%;
-    padding: 8px;
+    width: 96%;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    border: 1px solid #c49120; 
     border-radius: 4px;
   }
 
   button {
-    margin: 5px;
-    padding: 10px 15px;
-    border: none;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 10px 20px;
     border-radius: 5px;
+    background-color: #748e55; 
+    color: #fcfbe8;
+    border: none;
+    font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #6bba75;
+    }
+
+    &:nth-child(2) {
+      background-color: transparent;
+      border: 1px solid #748e55;
+      color: #748e55;
+
+      &:hover {
+        background-color: #748e55;
+        color: #fcfbe8;
+      }
+    }
   }
 
-  button:first-child {
-    background-color: #6bba75; /* Save button green */
-    color: #fff;
-  }
-
-  button:last-child {
-    background-color: #e0865e; /* Cancel button red */
-    color: #fff;
+  form {
+    margin-top: 20px;
   }
 }
