@@ -11,18 +11,18 @@ import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
+  { path: 'blogs/edit/:id', component: BlogEditorComponent },
+  { path: 'blogs/create', component: BlogEditorComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'blogs/:tag', component: BlogsComponent },
   { path: 'blogs', component: BlogsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
-  { path: 'blogs/create', component: BlogEditorComponent },
-  { path: 'blogs/edit/:id', component: BlogEditorComponent },
-
   { path: 'blog/:id', component: SingleBlogComponent },
   //Default Routes
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },
-  //Authentification guards
+  
   
 ]

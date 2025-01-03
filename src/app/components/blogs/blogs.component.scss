@@ -109,3 +109,55 @@
   }
   
 }
+
+.tag-button {
+  display: inline-block;
+  margin: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #748e55; /* Olive-green tone */
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-transform: capitalize; /* To make each tag's first letter capitalized */
+}
+
+.tag-button:hover {
+  background-color: #6bba75; /* Brighter green on hover */
+  transform: scale(1.1); /* Slight scaling effect */
+}
+
+.tag-button:focus {
+  outline: 2px solid #6bba75;
+  outline-offset: 2px;
+}
+
+.tag-button:active {
+  background-color: #5a9d63; /* Slightly darker green on click */
+  transform: scale(1.05); /* Slightly reduced scaling */
+}
+
+.blogs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .show-all-blogs-button {
+    order: 1; /* Align to the left */
+  }
+
+  .create-blog-button {
+    order: 2; /* Align to the right */
+  }
+
+  .login-warning {
+    flex-grow: 1;
+    text-align: center;
+    color: #ff0000;
+  }
+}
+

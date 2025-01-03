@@ -59,7 +59,13 @@ export class BlogEditorComponent implements OnInit {
   
    
     const authorId = user.uid;
-  
+
+    const processedTags = Array.isArray(this.blog.tags)
+    ? this.blog.tags.map((tag) => tag.trim().toLowerCase())
+    : this.blog.tags
+        .split(',')
+        .map((tag) => tag.trim().toLowerCase());
+        
     if (this.isEditing && blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
       await setDoc(blogDocRef, {
