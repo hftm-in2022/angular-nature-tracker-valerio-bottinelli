@@ -1,102 +1,110 @@
-<div class="blogs-container">
-  <h2>Blogs</h2>
+<div class="blogs-view">
+  <app-search-bar></app-search-bar>
 
-  <!-- Create Blog Button -->
-  <div class="blogs-header">
-    <!-- Show All Blogs Button -->
-    <app-button
-    class="show-all-blogs-button"
-    *ngIf="!isOnAllBlogsRoute"
-    (click)="navigateToBlogs()"
-  >
-    Show All Blogs
-  </app-button>
-  
+  <div class="blogs-container">
+    <h2>Blogs</h2>
+
     <!-- Create Blog Button -->
-    <app-button class="create-blog-button" *ngIf="isLoggedIn" (click)="navigateToCreate()">
-      Create New Blog
+    <div class="blogs-header">
+      <!-- Show All Blogs Button -->
+      <app-button
+      class="show-all-blogs-button"
+      *ngIf="!isOnAllBlogsRoute"
+      (click)="navigateToBlogs()"
+    >
+      Show All Blogs
     </app-button>
     
-    <p *ngIf="!isLoggedIn" class="login-warning">Log in to create a blog.</p>
-  </div>
-
-  <!-- Paginator -->
-  <mat-paginator
-    [length]="totalBlogs"
-    [pageSize]="itemsPerPage"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)"
-  ></mat-paginator>
-
-  <!-- List of Blogs -->
-  <button *ngFor="let blog of paginatedBlogs" class="blog-item" (click)="navigateToBlog(blog.id)">
-    <h3>{{ blog.title }}</h3>
-    <p>{{ blog.content }}</p>
-
-    <div *ngIf="blog.tags" class="tags-container">
-      <button
-        *ngFor="let tag of getFormattedTags(blog.tags)"
-        (click)="navigateToTag(tag, $event)"
-        class="tag-button"
-        [attr.aria-label]="'Filter by ' + tag"
-      >
-        {{ tag }}
-      </button>
+      <!-- Create Blog Button -->
+      <app-button class="create-blog-button" *ngIf="isLoggedIn" (click)="navigateToCreate()">
+        Create New Blog
+      </app-button>
+      
+      <p *ngIf="!isLoggedIn" class="login-warning">Log in to create a blog.</p>
     </div>
 
-    <hr />
-    <p><strong>Author:</strong> {{ blog.author }}</p>
-    <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
 
-    <div class="likes">
-      <ng-container *ngIf="blog.allowLikes; else likesNotAllowed">
+
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="totalBlogs"
+      [pageSize]="itemsPerPage"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
+
+
+
+    <!-- List of Blogs -->
+    <button *ngFor="let blog of paginatedBlogs" class="blog-item" (click)="navigateToBlog(blog.id)">
+      <h3>{{ blog.title }}</h3>
+      <p>{{ blog.content }}</p>
+
+      <div *ngIf="blog.tags" class="tags-container">
         <button
-          class="like-button"
-          (click)="toggleLike(blog, $event)"
-          aria-label="Toggle Like"
+          *ngFor="let tag of getFormattedTags(blog.tags)"
+          (click)="navigateToTag(tag, $event)"
+          class="tag-button"
+          [attr.aria-label]="'Filter by ' + tag"
         >
-          <img
-            [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
-            alt="Like"
-            class="like-icon"
-          />
+          {{ tag }}
         </button>
-        <span class="like-counter">{{ blog.likes || 0 }}</span>
-      </ng-container>
-      <ng-template #likesNotAllowed>
-        <span class="not-allowed">Likes not allowed</span>
-      </ng-template>
-    </div>
+      </div>
+
+      <hr />
+      <p><strong>Author:</strong> {{ blog.author }}</p>
+      <p><strong>Created:</strong> {{ blog.createdAt | date }}</p>
+
+      <div class="likes">
+        <ng-container *ngIf="blog.allowLikes; else likesNotAllowed">
+          <button
+            class="like-button"
+            (click)="toggleLike(blog, $event)"
+            aria-label="Toggle Like"
+          >
+            <img
+              [src]="likedBlogs[blog.id] ? '/assets/heart_solid.png' : '/assets/heart_outlined.png'"
+              alt="Like"
+              class="like-icon"
+            />
+          </button>
+          <span class="like-counter">{{ blog.likes || 0 }}</span>
+        </ng-container>
+        <ng-template #likesNotAllowed>
+          <span class="not-allowed">Likes not allowed</span>
+        </ng-template>
+      </div>
 
 
 
 
-    <div class="comments">
-      <ng-container *ngIf="blog.comments !== undefined; else commentsNotAllowed">
-       <p> <img
-            src="/assets/comment.png"
-            alt="Like"
-            class="like-icon"
-          />
-        <span class="comment-counter">{{ blog.comments || 0 }}</span></p>
-      </ng-container>
-      <ng-template #commentsNotAllowed>
-        <span class="not-allowed">Comments not allowed</span>
-      </ng-template>
-    </div>
+      <div class="comments">
+        <ng-container *ngIf="blog.comments !== undefined; else commentsNotAllowed">
+        <p> <img
+              src="/assets/comment.png"
+              alt="Like"
+              class="like-icon"
+            />
+          <span class="comment-counter">{{ blog.comments || 0 }}</span></p>
+        </ng-container>
+        <ng-template #commentsNotAllowed>
+          <span class="not-allowed">Comments not allowed</span>
+        </ng-template>
+      </div>
 
-    <!-- Blog Actions (Only for Blog Owner) -->
-    <div class="blog-actions" *ngIf="blog.authorId === currentUser?.uid">
-      <button (click)="navigateToEdit(blog.id, $event)">Edit</button>
-      <button (click)="deleteBlog(blog.id, $event)">Delete</button>
-    </div>
-  </button>
+      <!-- Blog Actions (Only for Blog Owner) -->
+      <div class="blog-actions" *ngIf="blog.authorId === currentUser?.uid">
+        <button (click)="navigateToEdit(blog.id, $event)">Edit</button>
+        <button (click)="deleteBlog(blog.id, $event)">Delete</button>
+      </div>
+    </button>
 
-  <!-- Paginator -->
-  <mat-paginator
-    [length]="totalBlogs"
-    [pageSize]="itemsPerPage"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)"
-  ></mat-paginator>
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="totalBlogs"
+      [pageSize]="itemsPerPage"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
+  </div>
 </div>

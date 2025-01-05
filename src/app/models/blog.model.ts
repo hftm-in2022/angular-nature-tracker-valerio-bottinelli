@@ -10,4 +10,5 @@ export interface Blog {
   allowLikes: boolean;
   likes: number;
   comments: number;
+  read: number;
 }

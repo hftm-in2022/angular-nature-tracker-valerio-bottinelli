@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import { query, where, addDoc, setDoc } from '@angular/fire/firestore';
+import { query, where, addDoc, setDoc, getDoc } from '@angular/fire/firestore';
 
 import {
   Firestore,
@@ -17,11 +17,12 @@ import { Blog } from '../../models/blog.model';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../button/button.component';
 import { ActivatedRoute } from '@angular/router';
+import { SearchBarComponent } from "../search-bar/search-bar.component";
 
 @Component({
   selector: 'app-blogs',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatPaginatorModule,ButtonComponent],
+  imports: [CommonModule, FormsModule, MatPaginatorModule, ButtonComponent, SearchBarComponent],
   templateUrl: './blogs.component.html',
   styleUrls: ['./blogs.component.scss'],
 })
@@ -48,6 +49,7 @@ export class BlogsComponent implements OnInit {
     allowLikes: false, 
     likes: 0,
     comments: 0,
+    read: 0,
   };
 
   isLoggedIn = false;
@@ -65,11 +67,9 @@ export class BlogsComponent implements OnInit {
   
 //initialization
   async ngOnInit(): Promise<void> {
-
     this.route.url.subscribe((segments) => {
       this.isOnAllBlogsRoute = segments.map(seg => seg.path).join('/') === 'blogs';
     });
-
     this.route.paramMap.subscribe(async (params) => {
       const tag = params.get('tag');
       
@@ -91,8 +91,6 @@ export class BlogsComponent implements OnInit {
         await this.loadUserLikes();
       }
     });
-
-   
   }
 
   async loadBlogsByTag(tag: string): Promise<void> {
@@ -143,6 +141,7 @@ export class BlogsComponent implements OnInit {
       allowLikes: false,
       likes: 0,
       comments: 0,
+      read: 0,
     };
   }
 
@@ -151,26 +150,44 @@ export class BlogsComponent implements OnInit {
     const blogsCollection = collection(this.firestore, 'blogs');
     const snapshot = await getDocs(blogsCollection);
   
-    this.blogs = snapshot.docs.map((doc) => {
-      const data = doc.data() as Partial<Blog>;
-      return {
-        id: doc.id,
-        title: data.title || '',
-        content: data.content || '',
-        author: data.author || 'Unknown',
-        authorId: data.authorId || '',
-        createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
-        tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []), 
-        allowComments: data.allowComments ?? false,
-        allowLikes: data.allowLikes ?? false,
-        likes: data.likes || 0, 
-        comments: data.comments || 0,
-      } as Blog;
-    });
+    this.blogs = await Promise.all(
+      snapshot.docs.map(async (docSnapshot) => {
+        const data = docSnapshot.data() as Partial<Blog>;
+  
+        // Fetch author details
+        const authorId = data.authorId || '';
+        let authorName = 'Unknown';
+  
+        if (authorId) {
+          const userDocRef = doc(this.firestore, `users/${authorId}`);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            authorName = userData['username'] || 'Unknown';
+          }
+        }
+  
+        return {
+          id: docSnapshot.id,
+          title: data.title || '',
+          content: data.content || '',
+          author: authorName,
+          authorId: authorId,
+          createdAt: data.createdAt instanceof Date ? data.createdAt : new Date(),
+          tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []),
+          allowComments: data.allowComments ?? false,
+          allowLikes: data.allowLikes ?? false,
+          likes: data.likes || 0,
+          comments: data.comments || 0,
+          read: data.read || 0,
+        } as Blog;
+      })
+    );
   
     this.totalBlogs = this.blogs.length;
     this.updatePaginatedBlogs();
   }
+  
   
 
   updatePaginatedBlogs(): void {
@@ -207,6 +224,7 @@ export class BlogsComponent implements OnInit {
       allowLikes: false,
       likes: 0,
       comments: 0,
+      read: 0,
     };
   }
 

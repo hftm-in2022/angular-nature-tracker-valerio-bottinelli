@@ -42,6 +42,7 @@ export class SingleBlogComponent implements OnInit {
     allowLikes: false,
     likes: 0,
     comments: 0,
+    read: 0,
   };
 
   likedBlogs: Record<string, boolean> = {};
@@ -49,6 +50,7 @@ export class SingleBlogComponent implements OnInit {
   commentsarray: Comment[] = [];
   newComment = ''; 
   userMap: Record<string, string> = {};
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +61,7 @@ export class SingleBlogComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const blogId = this.route.snapshot.paramMap.get('id');
+    const user = this.auth.currentUser;
     if (blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
       const blogDoc = await getDoc(blogDocRef);
@@ -75,6 +78,10 @@ export class SingleBlogComponent implements OnInit {
   
         await this.loadUsers(); // Load user data
         await this.loadComments(blogId); // Load comments
+        if (user?.uid !== this.blog.authorId && !this.route.snapshot.url.some(seg => seg.path === 'edit')) {
+          await updateDoc(blogDocRef, { read: (this.blog.read || 0) + 1 });
+        }
+
       } else {
         alert('Blog not found.');
         this.router.navigate(['/blogs']);
