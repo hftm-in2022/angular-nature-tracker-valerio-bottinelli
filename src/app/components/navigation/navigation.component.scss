@@ -70,3 +70,50 @@
   height: 16px;
   width: 16px;
 }
+
+/* General button styling */
+app-button {
+  display: inline-block;
+  background-color: #748e55; 
+  color: #fcfbe8; 
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none; 
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background-color: #6bba75;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: #c49120;
+    transform: scale(1); 
+  }
+
+  &.active {
+    background-color: #c49120; 
+    color: #150722; 
+    border-radius: 5px;
+    font-weight: bold;
+  }
+}
+
+
+a {
+  text-decoration: none; 
+  &.selected {
+    background-color: #c49120; 
+    color: #150722; 
+    border-radius: 5px;
+    font-weight: bold;
+  }
+}
+
