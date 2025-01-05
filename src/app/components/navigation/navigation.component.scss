@@ -7,6 +7,7 @@
   display: flex;
   justify-content: center;
   gap: 15px;
+  width: 80%;
 }
 
 /* Navigation Links */
@@ -24,7 +25,7 @@
 /* Hover Effect */
 .navigation a:hover {
   background-color: #6bba75;
-  color: #111111;
+  color: #150722;
 }
 
 /* Active Link */
@@ -89,7 +90,7 @@ app-button {
     transform 0.2s ease;
 
   &:hover {
-    background-color: #6bba75;
+    background-color: #748e55;
     transform: scale(1.05);
   }
 

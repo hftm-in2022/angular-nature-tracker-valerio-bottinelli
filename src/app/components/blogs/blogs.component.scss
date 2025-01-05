@@ -1,7 +1,111 @@
+.blogs-view {
+  display: flex;
+  flex-direction: row;
+}
+
+app-search-bar {
+  width: 250px;
+  background-color: #fcfbe8; /* AppColors.color5 */
+  border-right: 1px solid #c49120; /* AppColors.color4 */
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-size: 1.2rem;
+    color: #748e55; /* AppColors.color1 */
+    margin-bottom: 15px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #c49120; /* AppColors.color4 */
+    border-radius: 4px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: #6bba75; /* AppColors.greenColor */
+    }
+  }
+
+  .tag-button {
+    display: inline-block;
+    margin: 5px 0;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #748e55; /* AppColors.color1 */
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: capitalize;
+
+    &:hover {
+      background-color: #6bba75; /* Brighter green on hover */
+      transform: scale(1.1);
+    }
+
+    &:focus {
+      outline: 2px solid #6bba75;
+      outline-offset: 2px;
+    }
+
+    &:active {
+      background-color: #5a9d63; /* Slightly darker green on click */
+      transform: scale(1.05);
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin: 10px 0;
+
+      button {
+        background-color: #748e55; /* AppColors.color1 */
+        color: #fcfbe8; /* AppColors.color5 */
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        &:hover {
+          background-color: #6bba75; /* AppColors.greenColor */
+          transform: scale(1.05);
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px #6bba75; /* Highlight focus */
+        }
+
+        &:active {
+          background-color: #5a9d63; /* Slightly darker green on click */
+          transform: scale(1);
+        }
+      }
+    }
+  }
+}
+
+
+
+
 .blogs-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
 
   h2 {
     text-align: center;
@@ -173,4 +277,48 @@
     color: #ff0000;
   }
 }
+//app-button styling
+app-button {
+  display: inline-block;
+  background-color: #748e55; 
+  color: #fcfbe8; 
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none; 
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 
+  &:hover {
+    background-color: #6bba75;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: #c49120;
+    transform: scale(1); 
+  }
+
+  &.active {
+    background-color: #c49120; 
+    color: #150722; 
+    border-radius: 5px;
+    font-weight: bold;
+  }
+}
+
+
+a {
+  text-decoration: none; 
+  &.selected {
+    background-color: #c49120; 
+    color: #150722; 
+    border-radius: 5px;
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,28 @@
+<div class="search-bar">
+    <div class="tag-filter">
+        <h3>Filter by Tag</h3>
+        <div class="tag-input-container">
+          <input
+            type="text"
+            placeholder="Enter a tag..."
+            [(ngModel)]="tagQuery"
+            (keydown.enter)="filterByTag(tagQuery)"
+            class="tag-input"
+          />
+          <button (click)="filterByTag(tagQuery)" class="go-button">Go</button>
+        </div>
+      </div>
+      
+  
+    <h3>Featured Blogs</h3>
+  <ul class="featured-blogs">
+    <li *ngFor="let blog of featuredBlogs">
+      <a> <button (click)="viewBlog(blog.id)" class="featured-blog-link">
+        {{ blog.title }}
+    </button>
+      </a>
+    </li>
+  </ul>
+  
+  </div>
+  

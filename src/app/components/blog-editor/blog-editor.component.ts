@@ -27,6 +27,7 @@ export class BlogEditorComponent implements OnInit {
     allowLikes: false, 
     likes: 0,
     comments: 0,
+    read: 0,
   };
   isEditing = false;
 
@@ -63,10 +64,11 @@ export class BlogEditorComponent implements OnInit {
     const authorId = user.uid;
 
     const processedTags = Array.isArray(this.blog.tags)
-    ? this.blog.tags.map((tag) => tag.trim().toLowerCase())
-    : this.blog.tags
+    ? [...new Set(this.blog.tags.map((tag) => tag.trim().toLowerCase()).filter((tag) => tag))]
+    : [...new Set(this.blog.tags
         .split(',')
-        .map((tag) => tag.trim().toLowerCase());
+        .map((tag) => tag.trim().toLowerCase())
+        .filter((tag) => tag))];
 
 
     if (this.isEditing && blogId) {
@@ -74,9 +76,7 @@ export class BlogEditorComponent implements OnInit {
       await setDoc(blogDocRef, {
         ...this.blog,
         authorId: authorId, // Save authorId
-        tags: Array.isArray(this.blog.tags)
-          ? this.blog.tags
-          : this.blog.tags.split(',').map((tag) => tag.trim()),
+        tags: processedTags,
           allowComments: this.blog.allowComments, 
           allowLikes: this.blog.allowLikes,
       });
@@ -86,9 +86,7 @@ export class BlogEditorComponent implements OnInit {
       await setDoc(doc(blogsCollection), {
         ...this.blog,
         authorId: authorId, // Save authorId
-        tags: Array.isArray(this.blog.tags)
-          ? this.blog.tags
-          : this.blog.tags.split(',').map((tag) => tag.trim()),
+        tags: processedTags,
         createdAt: new Date(),
         allowComments: this.blog.allowComments, 
       allowLikes: this.blog.allowLikes, 
