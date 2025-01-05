@@ -35,10 +35,14 @@ export class NavigationComponent implements OnInit {
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          this.userRole = userData['role'] || null; // Get the role, default to null if not found
+          this.userRole = userData['role'] || null;
         }
       }
     });
+  }
+
+  isActive(path: string): boolean {
+    return this.router.url.startsWith(path);
   }
 
   logout(): void {

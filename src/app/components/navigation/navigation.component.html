@@ -1,21 +1,21 @@
 <nav class="navigation">
-  <a routerLink="/home" routerLinkActive="selected">
-    <button>Home</button>
+  <a routerLink="/home" >
+    <app-button  [ngClass]="{ 'active': isActive('/home') }" >Home</app-button>
   </a>
 
-  <a routerLink="/blogs" routerLinkActive="selected">
-    <app-button>Blogs</app-button>
+  <a routerLink="/blogs" >
+    <app-button [ngClass]="{ 'active': isActive('/blogs') }" >Blogs</app-button>
   </a>
 
   <ng-container *ngIf="isLoggedIn">
-    <a routerLink="/profile" routerLinkActive="selected">
-      <app-button [customClass]="'selected'">Profile</app-button>
+    <a routerLink="/profile" >
+      <app-button  [ngClass]="{ 'active': isActive('/profile') }" >Profile</app-button>
     </a>
   </ng-container>
 
   <ng-container *ngIf="userRole === 2" >
-    <a  routerLink="/user-management" routerLinkActive="selected">
-      <app-button [customClass]="'selected'">User Management</app-button>
+    <a  routerLink="/user-management">
+      <app-button  [ngClass]="{ 'active': isActive('/user-management') }" >User Management</app-button>
     </a>
 </ng-container>
 
@@ -24,7 +24,7 @@
   <div class="login-button-container">
     <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
       <a routerLink="/login">
-        <button class="login-button">
+        <button class="login-button" >
           <span>Login</span>
           <img src="assets/login.png" alt="Login Icon" class="login-icon" />
         </button>

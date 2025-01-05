@@ -68,9 +68,16 @@
       </ng-template>
     </div>
 
+
+
+
     <div class="comments">
       <ng-container *ngIf="blog.comments !== undefined; else commentsNotAllowed">
-        <p><strong>Comments: </strong> 
+       <p> <img
+            src="/assets/comment.png"
+            alt="Like"
+            class="like-icon"
+          />
         <span class="comment-counter">{{ blog.comments || 0 }}</span></p>
       </ng-container>
       <ng-template #commentsNotAllowed>

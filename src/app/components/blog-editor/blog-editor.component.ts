@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '@angular/fire/auth';
 
+
 @Component({
   selector: 'app-blog-editor',
   standalone: true,
@@ -49,6 +50,7 @@ export class BlogEditorComponent implements OnInit {
   }
 
   async saveBlog(): Promise<void> {
+
     const blogId = this.route.snapshot.paramMap.get('id');
     const user = this.auth.currentUser;
   
@@ -65,7 +67,8 @@ export class BlogEditorComponent implements OnInit {
     : this.blog.tags
         .split(',')
         .map((tag) => tag.trim().toLowerCase());
-        
+
+
     if (this.isEditing && blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
       await setDoc(blogDocRef, {
@@ -95,8 +98,9 @@ export class BlogEditorComponent implements OnInit {
   
     this.goToBlogs();
   }
-  
 
+
+ 
 
   goToBlogs(): void {
     this.router.navigate(['/blogs']);
