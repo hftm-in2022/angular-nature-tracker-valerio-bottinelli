@@ -15,7 +15,7 @@ import { Auth } from '@angular/fire/auth';
   styleUrls: ['./blog-editor.component.scss']
 })
 export class BlogEditorComponent implements OnInit {
-  blog: Blog = {
+  blog: Blog = {  // wo ist die Reactive Form
     id: '',
     title: '',
     content: '',
@@ -31,7 +31,7 @@ export class BlogEditorComponent implements OnInit {
   };
   isEditing = false;
 
-  constructor(
+  constructor( // bitte anstelle constructor injection die inject function benutzem
     private route: ActivatedRoute,
     private router: Router,
     private firestore: Firestore,
@@ -50,7 +50,7 @@ export class BlogEditorComponent implements OnInit {
     }
   }
 
-  async saveBlog(): Promise<void> {
+  async saveBlog(): Promise<void> {   // separation of concern, das state management und backend sevices separieren und nicht alles in die Komponenten machen.
 
     const blogId = this.route.snapshot.paramMap.get('id');
     const user = this.auth.currentUser;

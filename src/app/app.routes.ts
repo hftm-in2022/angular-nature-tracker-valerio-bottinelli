@@ -9,7 +9,7 @@ import { SingleBlogComponent } from './components/single-blog/single-blog.compon
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { AuthGuard } from './guards/auth.guard';
 
-export const routes: Routes = [
+export const routes: Routes = [ // keine Lazy loaded routes
   { path: 'user-management', component: UserManagementComponent, canActivate: [AuthGuard] },
   { path: 'blogs/edit/:id', component: BlogEditorComponent },
   { path: 'blogs/create', component: BlogEditorComponent },

@@ -8,7 +8,7 @@ import { from } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate { // anstelle der Klasse bitte Guardfunction benutzen
   constructor(private auth: Auth, private firestore: Firestore, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {

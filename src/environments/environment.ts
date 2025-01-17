@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: 'AIzaSyAc551CmtX9-2GTYpacqN5pFTeVcKR-yNA',
+    apiKey: 'AIzaSyAc551CmtX9-2GTYpacqN5pFTeVcKR-yNA', // der api key sollte nicht im Code sein
     authDomain: 'nature-tracker-hftm.firebaseapp.com',
     projectId: 'nature-tracker-hftm',
     storageBucket: 'nature-tracker-hftm.firebasestorage.app',

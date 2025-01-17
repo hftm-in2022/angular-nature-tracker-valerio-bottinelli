@@ -60,7 +60,7 @@ export class SingleBlogComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const blogId = this.route.snapshot.paramMap.get('id');
+    const blogId = this.route.snapshot.paramMap.get('id');  // id kann mittels withComponentInputBinding als input definiert werden
     const user = this.auth.currentUser;
     if (blogId) {
       const blogDocRef = doc(this.firestore, `blogs/${blogId}`);

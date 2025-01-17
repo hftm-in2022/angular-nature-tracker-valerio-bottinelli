@@ -21,7 +21,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  isCenteredPage = false;
+  isCenteredPage = false; // wo wird das benutzt?
 
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
